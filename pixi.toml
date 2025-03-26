@@ -9,5 +9,15 @@ platforms = ["osx-arm64"]
 version = "0.1.0"
 
 [tasks]
+postinstall = "pip install --no-build-isolation --no-deps --disable-pip-version-check -e ."
+
+[host-dependencies]
+pip = "*"
+hatchling = "*"
 
 [dependencies]
+python = ">=3.9"
+polars = ">=0.19, <2"
+pandas = ">=2"
+SQLAlchemy = ">=1.4.39, <3"
+pyarrow = ">=11.0.0"
