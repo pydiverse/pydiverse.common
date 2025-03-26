@@ -1,0 +1,13 @@
+[project]
+authors = [
+    "Martin Trautmann <windiana@users.sf.net>",
+    "Finn Rudolph <finn.rudolph@t-online.de>",
+]
+channels = ["conda-forge"]
+name = "pydiverse.common"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
