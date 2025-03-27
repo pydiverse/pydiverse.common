@@ -189,6 +189,7 @@ class Dtype:
             pl.Date: Date(),
             pl.Null: NullType(),
             pl.Duration: Duration(),
+            pl.Enum: String(),
         }[polars_type.base_type()]
 
     def to_sql(self):
