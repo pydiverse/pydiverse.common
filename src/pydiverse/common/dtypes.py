@@ -375,6 +375,9 @@ class List(Dtype):
     def __hash__(self):
         return hash((0, hash(self.inner)))
 
+    def __repr__(self):
+        return f"List[{repr(self.inner)}]"
+
     def to_sql(self):
         import sqlalchemy as sqa
 
