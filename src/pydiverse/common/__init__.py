@@ -21,6 +21,7 @@ from .dtypes import (
     Uint32,
     Uint64,
     NullType,
+    PandasBackend,
 )
 
 __all__ = [
@@ -47,4 +48,5 @@ __all__ = [
     "Uint64",
     "Dtype",
     "List",
+    "PandasBackend",
 ]

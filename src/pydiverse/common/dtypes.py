@@ -1,10 +1,8 @@
 from __future__ import annotations
-import datetime
 from enum import Enum
-from types import NoneType
 
 
-class PandasDTypeBackend(str, Enum):
+class PandasBackend(str, Enum):
     NUMPY = "numpy"
     ARROW = "arrow"
 
@@ -216,23 +214,21 @@ class Dtype:
             NullType(): sqa.types.NullType(),
         }[self]
 
-    def to_pandas(self, backend: PandasDTypeBackend = PandasDTypeBackend.ARROW):
+    def to_pandas(self, backend: PandasBackend = PandasBackend.ARROW):
         import pandas as pd
 
-        if backend == PandasDTypeBackend.NUMPY:
+        if backend == PandasBackend.NUMPY:
             return self.to_pandas_nullable(backend)
-        if backend == PandasDTypeBackend.ARROW:
+        if backend == PandasBackend.ARROW:
             if self == String():
                 return pd.StringDtype(storage="pyarrow")
             return pd.ArrowDtype(self.to_arrow())
 
-    def to_pandas_nullable(
-        self, backend: PandasDTypeBackend = PandasDTypeBackend.ARROW
-    ):
+    def to_pandas_nullable(self, backend: PandasBackend = PandasBackend.ARROW):
         import pandas as pd
 
         if self == Time():
-            if backend == PandasDTypeBackend.ARROW:
+            if backend == PandasBackend.ARROW:
                 return pd.ArrowDtype(self.to_arrow())
             raise TypeError("pandas doesn't have a native time dtype")
 
