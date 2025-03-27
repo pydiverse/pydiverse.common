@@ -1,5 +1,7 @@
 from __future__ import annotations
+import datetime
 from enum import Enum
+from types import NoneType
 
 
 class PandasDTypeBackend(str, Enum):
@@ -13,6 +15,26 @@ class Dtype:
 
     def __hash__(self):
         return hash(type(self))
+
+    def __repr__(self):
+        return self.__class__.__name__
+
+    @classmethod
+    def is_int(cls):
+        return False
+
+    @classmethod
+    def is_float(cls):
+        return False
+
+    @classmethod
+    def is_subtype(cls, rhs):
+        rhs_cls = type(rhs)
+        return (
+            (cls is rhs_cls)
+            or (rhs_cls is Int and cls.is_int())
+            or (rhs_cls is Float and cls.is_float())
+        )
 
     @staticmethod
     def from_sql(sql_type) -> Dtype:
@@ -29,7 +51,7 @@ class Dtype:
             if precision <= 24:
                 return Float32()
             return Float64()
-        if isinstance(sql_type, sqa.Numeric):
+        if isinstance(sql_type, sqa.Numeric | sqa.DECIMAL):
             # Just to be safe, we always use FLOAT64 for fixpoint numbers.
             # Databases are obsessed about fixpoint. However, in dataframes, it
             # is more common to just work with double precision floating point.
@@ -46,6 +68,8 @@ class Dtype:
             return Datetime()
         if isinstance(sql_type, sqa.ARRAY):
             return List(Dtype.from_sql(sql_type.item_type.from_sql))
+        if isinstance(sql_type, sqa.Null):
+            return NullType()
 
         raise TypeError
 
@@ -165,6 +189,8 @@ class Dtype:
             pl.Datetime: Datetime(),
             pl.Time: Time(),
             pl.Date: Date(),
+            pl.Null: NullType(),
+            pl.Duration: Duration(),
         }[polars_type.base_type()]
 
     def to_sql(self):
@@ -186,6 +212,8 @@ class Dtype:
             Date(): sqa.Date(),
             Time(): sqa.Time(),
             Datetime(): sqa.DateTime(),
+            Decimal(): sqa.DECIMAL(),
+            NullType(): sqa.types.NullType(),
         }[self]
 
     def to_pandas(self, backend: PandasDTypeBackend = PandasDTypeBackend.ARROW):
@@ -222,7 +250,7 @@ class Dtype:
             String(): pd.StringDtype(),
             Bool(): pd.BooleanDtype(),
             Date(): "datetime64[ns]",
-            # DType.TIME not supported
+            # Time() not supported
             Datetime(): "datetime64[ns]",
         }[self]
 
@@ -264,12 +292,17 @@ class Dtype:
             String(): pl.Utf8,
             Bool(): pl.Boolean,
             Datetime(): pl.Datetime("us"),
+            Duration(): pl.Duration,
             Time(): pl.Time,
             Date(): pl.Date,
+            NullType(): pl.Null,
         }[self]
 
 
-class Float(Dtype): ...
+class Float(Dtype):
+    @classmethod
+    def is_float(cls):
+        return True
 
 
 class Float64(Float): ...
@@ -281,7 +314,10 @@ class Float32(Float): ...
 class Decimal(Dtype): ...
 
 
-class Int(Dtype): ...
+class Int(Dtype):
+    @classmethod
+    def is_int(cls):
+        return True
 
 
 class Int64(Int): ...
