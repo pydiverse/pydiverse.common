@@ -246,9 +246,9 @@ class Dtype:
             Float64(): pd.Float64Dtype(),
             String(): pd.StringDtype(),
             Bool(): pd.BooleanDtype(),
-            Date(): "datetime64[ns]",
+            Date(): "datetime64[s]",
             # Time() not supported
-            Datetime(): "datetime64[ns]",
+            Datetime(): "datetime64[us]",
         }[self]
 
     def to_arrow(self):
