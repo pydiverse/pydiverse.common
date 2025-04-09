@@ -5,7 +5,7 @@ authors = [
 ]
 channels = ["conda-forge"]
 name = "pydiverse.common"
-platforms = ["osx-arm64"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64", "linux-aarch64"]
 version = "0.1.0"
 
 [tasks]
