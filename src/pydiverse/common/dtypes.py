@@ -9,6 +9,8 @@ class PandasBackend(str, Enum):
 
 
 class Dtype:
+    """Base class for all data types."""
+
     def __eq__(self, rhs):
         return isinstance(rhs, Dtype) and type(self) is type(rhs)
 

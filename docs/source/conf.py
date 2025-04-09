@@ -60,10 +60,6 @@ intersphinx_mapping = {
     "sa": ("https://docs.sqlalchemy.org/en/stable", None),
     "pd": ("https://pandas.pydata.org/pandas-docs/stable", None),
     "pl": ("https://pola-rs.github.io/polars/py-polars/html", None),
-    "tp": ("https://tidypolars.readthedocs.io/en/stable", None),
-    "ibis": ("https://ibis-project.org/", None),
-    "kazoo": ("https://kazoo.readthedocs.io/en/latest", None),
-    "dask": ("https://docs.dask.org/en/stable", None),
 }
 
 napoleon_custom_sections = [

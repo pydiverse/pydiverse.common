@@ -100,8 +100,8 @@ def test_dtype_to_pandas_numpy():
     assert_conversion(String(), pd.StringDtype())
     assert_conversion(Bool(), pd.BooleanDtype())
 
-    assert_conversion(Date(), np.dtype("datetime64[ns]"))
-    assert_conversion(Datetime(), np.dtype("datetime64[ns]"))
+    assert_conversion(Date(), "datetime64[s]")
+    assert_conversion(Datetime(), "datetime64[us]")
 
     with pytest.raises(TypeError):
         Time().to_pandas(PandasBackend.NUMPY)
