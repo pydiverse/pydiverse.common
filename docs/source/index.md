@@ -48,7 +48,6 @@ Check out the Pydiverse libraries on Read the Docs:
 :maxdepth: 2
 :hidden:
 
-reference/config
 reference/api
 ```
 

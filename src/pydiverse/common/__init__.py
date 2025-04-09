@@ -48,7 +48,6 @@ __all__ = [
     "Uint16",
     "Uint32",
     "Uint64",
-    "Dtype",
     "List",
     "PandasBackend",
 ]

@@ -28,6 +28,5 @@ Public
 .. autoclass:: Uint16
 .. autoclass:: Uint32
 .. autoclass:: Uint64
-.. autoclass:: Dtype
 .. autoclass:: List
 .. autoclass:: PandasBackend
