@@ -1,7 +1,7 @@
 [project]
 authors = [
-    "Martin Trautmann <windiana@users.sf.net>",
-    "Finn Rudolph <finn.rudolph@t-online.de>",
+  "Martin Trautmann <windiana@users.sf.net>",
+  "Finn Rudolph <finn.rudolph@t-online.de>",
 ]
 channels = ["conda-forge"]
 name = "pydiverse.common"
@@ -23,7 +23,43 @@ SQLAlchemy = ">=1.4.39, <3"
 pyarrow = ">=11.0.0"
 
 [feature.dev.dependencies]
-pytest = ">=7.2.0"
+ruff = ">=0.5.6"
+pre-commit = ">=3"
+pre-commit-hooks = "*"
+taplo = "*"
+typos = "*"
+pixi-pycharm = ">=0.0.6"
+pytest = ">=7.1.2"
+pytest-xdist = ">=2.5.0"
+
+[feature.release.dependencies]
+hatch = ">=1.12.0"
+twine = ">=5.1.1"
+
+[feature.docs.dependencies]
+Sphinx = ">=7.3.7"
+furo = ">=2023.5.20"
+sphinxcontrib-apidoc = ">=0.3.0"
+myst-parser = ">=2.0.0"
+sphinx-autosummary-accessors = "2023.4.0"
+[feature.docs.tasks]
+docs = "cd docs && make html "
+readthedocs = "rm -rf $READTHEDOCS_OUTPUT/html && cp -r docs/build/html $READTHEDOCS_OUTPUT/html"
+
+[feature.py310.dependencies]
+python = "3.10.*"
+[feature.py311.dependencies]
+python = "3.11.*"
+[feature.py312.dependencies]
+python = "3.12.*"
+[feature.py313.dependencies]
+python = "3.13.*"
 
 [environments]
-default = ["dev"]
+default = ["py312", "dev"]
+py310 = ["py310", "dev"]
+py311 = ["py311", "dev"]
+py312 = ["py312", "dev"]
+py313 = ["py313", "dev"]
+docs = ["docs"]
+release = { features = ["release"], no-default-feature = true }

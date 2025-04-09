@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .dtypes import (
     Bool,
     Date,
@@ -14,14 +16,14 @@ from .dtypes import (
     Int32,
     Int64,
     List,
+    NullType,
+    PandasBackend,
     String,
-    Uint8,
     Time,
+    Uint8,
     Uint16,
     Uint32,
     Uint64,
-    NullType,
-    PandasBackend,
 )
 
 __all__ = [

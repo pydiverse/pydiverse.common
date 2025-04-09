@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from enum import Enum
 
 
@@ -73,8 +74,8 @@ class Dtype:
 
     @staticmethod
     def from_pandas(pandas_type) -> Dtype:
-        import pandas as pd
         import numpy as np
+        import pandas as pd
 
         if isinstance(pandas_type, pd.ArrowDtype):
             return Dtype.from_arrow(pandas_type.pyarrow_dtype)
