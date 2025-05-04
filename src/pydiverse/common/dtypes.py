@@ -67,6 +67,8 @@ class Dtype:
             return Time()
         if isinstance(sql_type, sqa.DateTime):
             return Datetime()
+        if isinstance(sql_type, sqa.Interval):
+            return Duration()
         if isinstance(sql_type, sqa.ARRAY):
             return List(Dtype.from_sql(sql_type.item_type.from_sql))
         if isinstance(sql_type, sqa.Null):
@@ -165,6 +167,8 @@ class Dtype:
             return Date()
         if pa.types.is_time(arrow_type):
             return Time()
+        if pa.types.is_duration(arrow_type):
+            return Duration()
         raise TypeError
 
     @staticmethod
@@ -214,6 +218,7 @@ class Dtype:
             Date(): sqa.Date(),
             Time(): sqa.Time(),
             Datetime(): sqa.DateTime(),
+            Duration(): sqa.Interval(),
             Decimal(): sqa.DECIMAL(),
             NullType(): sqa.types.NullType(),
         }[self]
@@ -273,6 +278,7 @@ class Dtype:
             Date(): pa.date32(),
             Time(): pa.time64("us"),
             Datetime(): pa.timestamp("us"),
+            Duration(): pa.duration("us"),
         }[self]
 
     def to_polars(self: Dtype):
