@@ -23,11 +23,8 @@ SQLAlchemy = ">=1.4.39, <3"
 pyarrow = ">=11.0.0"
 
 [feature.dev.dependencies]
-ruff = ">=0.5.6"
 pre-commit = ">=3"
 pre-commit-hooks = "*"
-taplo = "*"
-typos = "*"
 pixi-pycharm = ">=0.0.6"
 pytest = ">=7.1.2"
 pytest-xdist = ">=2.5.0"
@@ -46,10 +43,30 @@ sphinx-click = ">=4.4.0"
 sphinx-autobuild = ">=2021.3.14"
 sphinx-copybutton = ">=0.5.2"
 
-
 [feature.docs.tasks]
 docs = "cd docs && make html "
 readthedocs = "rm -rf $READTHEDOCS_OUTPUT/html && cp -r docs/build/html $READTHEDOCS_OUTPUT/html"
+
+[feature.lint.dependencies]
+#commitit-internal = "*"
+pre-commit = "*"
+insert-license-header = "*"
+docformatter = "*"
+ruff = ">=0.5.6"
+prettier = "*"
+nbstripout = "*"
+sqlfluff = "*"
+taplo = "*"
+pre-commit-hooks = "*"
+typos = "*"
+conda-deny = "*"
+
+[feature.lint.tasks]
+#commitit-install = "commitit install"
+#commitit = "commitit run --all-files"
+pre-commit-install = "pre-commit install"
+pre-commit-run = "pre-commit run -a"
+conda-deny = "conda-deny check"
 
 [feature.py310.dependencies]
 python = "3.10.*"
@@ -67,4 +84,5 @@ py311 = ["py311", "dev"]
 py312 = ["py312", "dev"]
 py313 = ["py313", "dev"]
 docs = ["docs"]
+lint = { features = ["lint"], no-default-feature = true }
 release = { features = ["release"], no-default-feature = true }
