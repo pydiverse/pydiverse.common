@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1 (2025-06-06)
+- also support to_xxx() for generic Int and Float Dtype classes
+
 ## 0.2.0 (2025-06-06)
 - moved many utility functions from `pydiverse.pipedag` to `pydiverse.common`;
     this includes deep_map, ComputationTracer, @disposable, @requires, stable_hash,
