@@ -7,7 +7,7 @@ Heavily inspired by the builtin copy module of python:
 https://github.com/python/cpython/blob/main/Lib/copy.py
 """
 
-from typing import Callable
+from collections.abc import Callable
 
 from .computation_tracing import fully_qualified_name
 from .import_ import load_object
@@ -67,7 +67,7 @@ def _deep_map_tuple(x, fn, memo):
         return memo[id(x)]
     except KeyError:
         pass
-    for k, j in zip(x, y):
+    for k, j in zip(x, y, strict=False):
         if k is not j:
             y = tuple(y)
             break

@@ -23,7 +23,7 @@ def requires(requirements: Any | list, exception: BaseException | type[BaseExcep
     and raises the provided exception instead.
     """
 
-    if not isinstance(requirements, (list, tuple)):
+    if not isinstance(requirements, list | tuple):
         requirements = (requirements,)
 
     def decorator(cls):
