@@ -20,6 +20,7 @@ except ImportError:
 
     structlog.dev = dev
     structlog_installed = False
+    EventDict, WrappedLogger = None, None
 
 
 class StructlogHandler(logging.Handler):
