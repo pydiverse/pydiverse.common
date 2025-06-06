@@ -1,6 +1,5 @@
 # Copyright (c) QuantCo and pydiverse contributors 2025-2025
 # SPDX-License-Identifier: BSD-3-Clause
-
 from __future__ import annotations
 
 import dis
@@ -86,8 +85,7 @@ class ComputationTracer:
             from dask.base import tokenize
         except ModuleNotFoundError:
             raise ModuleNotFoundError(
-                "module dask is required to use @materialize(version=AUTO_VERSION)"
-                " or computation_tracing."
+                "module dask is required to use computation_tracing."
             ) from None
 
         return tokenize(self.trace)
