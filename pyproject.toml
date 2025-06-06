@@ -1,6 +1,6 @@
 [project]
 name = "pydiverse-common"
-version = "0.2.0"
+version = "0.2.1"
 description = "Common functionality shared between pydiverse libraries"
 authors = [
   { name = "QuantCo, Inc." },
@@ -32,6 +32,7 @@ packages = ["src/pydiverse"]
 
 [tool.ruff]
 fix = true
+target-version = "py310"
 extend-exclude = ["docs/*"]
 
 [tool.ruff.lint]

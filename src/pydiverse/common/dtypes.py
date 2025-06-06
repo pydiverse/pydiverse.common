@@ -207,6 +207,7 @@ class Dtype:
         import sqlalchemy as sqa
 
         return {
+            Int(): sqa.BigInteger(),  # we default to 64 bit
             Int8(): sqa.SmallInteger(),
             Int16(): sqa.SmallInteger(),
             Int32(): sqa.Integer(),
@@ -215,6 +216,7 @@ class Dtype:
             Uint16(): sqa.Integer(),
             Uint32(): sqa.BigInteger(),
             Uint64(): sqa.BigInteger(),
+            Float(): sqa.Float(53),  # we default to 64 bit
             Float32(): sqa.Float(24),
             Float64(): sqa.Float(53),
             Decimal(): sqa.DECIMAL(),
@@ -245,6 +247,7 @@ class Dtype:
             raise TypeError("pandas doesn't have a native time dtype")
 
         return {
+            Int(): pd.Int64Dtype(),  # we default to 64 bit
             Int8(): pd.Int8Dtype(),
             Int16(): pd.Int16Dtype(),
             Int32(): pd.Int32Dtype(),
@@ -253,6 +256,7 @@ class Dtype:
             Uint16(): pd.UInt16Dtype(),
             Uint32(): pd.UInt32Dtype(),
             Uint64(): pd.UInt64Dtype(),
+            Float(): pd.Float64Dtype(),  # we default to 64 bit
             Float32(): pd.Float32Dtype(),
             Float64(): pd.Float64Dtype(),
             Decimal(): pd.Float64Dtype(),  # NumericDtype is
@@ -267,6 +271,7 @@ class Dtype:
         import pyarrow as pa
 
         return {
+            Int(): pa.int64(),  # we default to 64 bit
             Int8(): pa.int8(),
             Int16(): pa.int16(),
             Int32(): pa.int32(),
@@ -275,6 +280,7 @@ class Dtype:
             Uint16(): pa.uint16(),
             Uint32(): pa.uint32(),
             Uint64(): pa.uint64(),
+            Float(): pa.float64(),  # we default to 64 bit
             Float32(): pa.float32(),
             Float64(): pa.float64(),
             Decimal(): pa.decimal128(35, 10),  # Arbitrary precision
@@ -289,6 +295,7 @@ class Dtype:
         import polars as pl
 
         return {
+            Int(): pl.Int64,  # we default to 64 bit
             Int64(): pl.Int64,
             Int32(): pl.Int32,
             Int16(): pl.Int16,
@@ -297,6 +304,7 @@ class Dtype:
             Uint32(): pl.UInt32,
             Uint16(): pl.UInt16,
             Uint8(): pl.UInt8,
+            Float(): pl.Float64,  # we default to 64 bit
             Float64(): pl.Float64,
             Float32(): pl.Float32,
             Decimal(): pl.Decimal(scale=10),  # Arbitrary precision
