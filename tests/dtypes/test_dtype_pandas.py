@@ -4,11 +4,18 @@
 from __future__ import annotations
 
 import datetime as dt
+import types
 
-import numpy as np
-import pandas as pd
-import pyarrow as pa
 import pytest
+
+try:
+    import numpy as np
+    import pandas as pd
+    import pyarrow as pa
+except ImportError:
+    np = pa = None
+    pd = types.ModuleType("pandas")
+    pd.__version__ = "0.0.0"
 
 from pydiverse.common import (
     Bool,
@@ -31,6 +38,7 @@ from pydiverse.common import (
 )
 
 
+@pytest.mark.skipif(np is None, reason="requires pandas, numpy, and pyarrow")
 def test_dtype_from_pandas():
     def assert_conversion(type_, expected):
         assert Dtype.from_pandas(type_) == expected
@@ -86,6 +94,7 @@ def test_dtype_from_pandas():
     assert_conversion(pd.BooleanDtype(), Bool())
 
 
+@pytest.mark.skipif(np is None, reason="requires pandas, numpy, and pyarrow")
 def test_dtype_to_pandas_numpy():
     def assert_conversion(type_: Dtype, expected):
         assert type_.to_pandas(PandasBackend.NUMPY) == expected
@@ -110,6 +119,7 @@ def test_dtype_to_pandas_numpy():
         Time().to_pandas(PandasBackend.NUMPY)
 
 
+@pytest.mark.skipif(np is None, reason="requires pandas, numpy, and pyarrow")
 @pytest.mark.skipif("pd.__version__ < '2'")
 def test_dtype_to_pandas_pyarrow():
     def assert_conversion(type_: Dtype, expected):

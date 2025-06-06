@@ -3,7 +3,12 @@
 
 from __future__ import annotations
 
-import pyarrow as pa
+import pytest
+
+try:
+    import pyarrow as pa
+except ImportError:
+    pa = None
 
 from pydiverse.common import (
     Bool,
@@ -25,6 +30,7 @@ from pydiverse.common import (
 )
 
 
+@pytest.mark.skipif(pa is None, reason="requires pyarrow")
 def test_dtype_from_pyarrow():
     def assert_conversion(type_, expected):
         assert Dtype.from_arrow(type_) == expected
@@ -60,6 +66,7 @@ def test_dtype_from_pyarrow():
     assert_conversion(pa.timestamp("ns"), Datetime())
 
 
+@pytest.mark.skipif(pa is None, reason="requires pyarrow")
 def test_dtype_to_pyarrow():
     def assert_conversion(type_: Dtype, expected):
         assert type_.to_arrow() == expected

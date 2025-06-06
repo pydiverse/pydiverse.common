@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-import sqlalchemy as sa
+import pytest
 
 from pydiverse.common import (
     Bool,
@@ -24,7 +24,13 @@ from pydiverse.common import (
     Uint64,
 )
 
+try:
+    import sqlalchemy as sa
+except ImportError:
+    sa = None
 
+
+@pytest.mark.skipif(sa is None, reason="requires sqlalchemy")
 def test_dtype_from_sqlalchemy():
     def assert_conversion(type_, expected):
         assert Dtype.from_sql(type_) == expected
@@ -50,6 +56,7 @@ def test_dtype_from_sqlalchemy():
     assert_conversion(sa.DateTime(), Datetime())
 
 
+@pytest.mark.skipif(sa is None, reason="requires sqlalchemy")
 def test_dtype_to_sqlalchemy():
     def assert_conversion(type_: Dtype, expected):
         assert isinstance(type_.to_sql(), expected)
