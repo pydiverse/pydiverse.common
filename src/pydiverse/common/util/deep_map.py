@@ -7,8 +7,6 @@ Heavily inspired by the builtin copy module of python:
 https://github.com/python/cpython/blob/main/Lib/copy.py
 """
 
-from __future__ import annotations
-
 from typing import Callable
 
 from .computation_tracing import fully_qualified_name

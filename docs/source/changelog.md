@@ -4,6 +4,7 @@
 - moved many utility functions from `pydiverse.pipedag` to `pydiverse.common`;
     this includes deep_map, ComputationTracer, @disposable, @requires, stable_hash,
     load_object, and structlog initialization
+- Decimal becomes subtype of Float
 
 ## 0.1.0 (2022-09-01)
 Initial release.

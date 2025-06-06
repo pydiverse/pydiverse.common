@@ -9,8 +9,6 @@ But for snippets, license restrictions exist:
 https://www.ictrecht.nl/en/blog/what-is-the-license-status-of-stackoverflow-code-snippets
 """  # noqa: E501
 
-from __future__ import annotations
-
 from collections.abc import Iterable, Mapping
 
 from box import Box

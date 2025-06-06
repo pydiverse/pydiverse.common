@@ -1,8 +1,5 @@
 # Copyright (c) QuantCo and pydiverse contributors 2025-2025
 # SPDX-License-Identifier: BSD-3-Clause
-
-from __future__ import annotations
-
 from enum import Enum
 
 
@@ -41,7 +38,7 @@ class Dtype:
         )
 
     @staticmethod
-    def from_sql(sql_type) -> Dtype:
+    def from_sql(sql_type) -> "Dtype":
         import sqlalchemy as sqa
 
         if isinstance(sql_type, sqa.SmallInteger):
@@ -59,6 +56,9 @@ class Dtype:
             # Just to be safe, we always use FLOAT64 for fixpoint numbers.
             # Databases are obsessed about fixpoint. However, in dataframes, it
             # is more common to just work with double precision floating point.
+            # We see Decimal as subtype of Float. Pydiverse.transform will convert
+            # Decimal to Float64 whenever it cannot guarantee semantic correctness
+            # otherwise.
             return Float64()
         if isinstance(sql_type, sqa.String):
             return String()
@@ -78,7 +78,7 @@ class Dtype:
         raise TypeError
 
     @staticmethod
-    def from_pandas(pandas_type) -> Dtype:
+    def from_pandas(pandas_type) -> "Dtype":
         import numpy as np
         import pandas as pd
 
@@ -123,11 +123,12 @@ class Dtype:
             return Bool()
         if pd.api.types.is_datetime64_any_dtype(pandas_type):
             return Datetime()
+        # we don't know any decimal dtype in pandas if column is not arrow backed
 
         raise TypeError
 
     @staticmethod
-    def from_arrow(arrow_type) -> Dtype:
+    def from_arrow(arrow_type) -> "Dtype":
         import pyarrow as pa
 
         if pa.types.is_signed_integer(arrow_type):
@@ -158,6 +159,9 @@ class Dtype:
             if pa.types.is_float16(arrow_type):
                 return Float32()
             raise TypeError
+        if pa.types.is_decimal(arrow_type):
+            # We don't recommend using Decimal in dataframes, but we support it.
+            return Decimal()
         if pa.types.is_string(arrow_type):
             return String()
         if pa.types.is_boolean(arrow_type):
@@ -171,7 +175,7 @@ class Dtype:
         raise TypeError
 
     @staticmethod
-    def from_polars(polars_type) -> Dtype:
+    def from_polars(polars_type) -> "Dtype":
         import polars as pl
 
         if isinstance(polars_type, pl.List):
@@ -188,6 +192,7 @@ class Dtype:
             pl.UInt8: Uint8(),
             pl.Float64: Float64(),
             pl.Float32: Float32(),
+            pl.Decimal: Decimal(),
             pl.Utf8: String(),
             pl.Boolean: Bool(),
             pl.Datetime: Datetime(),
@@ -212,12 +217,12 @@ class Dtype:
             Uint64(): sqa.BigInteger(),
             Float32(): sqa.Float(24),
             Float64(): sqa.Float(53),
+            Decimal(): sqa.DECIMAL(),
             String(): sqa.String(),
             Bool(): sqa.Boolean(),
             Date(): sqa.Date(),
             Time(): sqa.Time(),
             Datetime(): sqa.DateTime(),
-            Decimal(): sqa.DECIMAL(),
             NullType(): sqa.types.NullType(),
         }[self]
 
@@ -250,6 +255,7 @@ class Dtype:
             Uint64(): pd.UInt64Dtype(),
             Float32(): pd.Float32Dtype(),
             Float64(): pd.Float64Dtype(),
+            Decimal(): pd.Float64Dtype(),  # NumericDtype is
             String(): pd.StringDtype(),
             Bool(): pd.BooleanDtype(),
             Date(): "datetime64[s]",
@@ -271,6 +277,7 @@ class Dtype:
             Uint64(): pa.uint64(),
             Float32(): pa.float32(),
             Float64(): pa.float64(),
+            Decimal(): pa.decimal128(35, 10),  # Arbitrary precision
             String(): pa.string(),
             Bool(): pa.bool_(),
             Date(): pa.date32(),
@@ -278,7 +285,7 @@ class Dtype:
             Datetime(): pa.timestamp("us"),
         }[self]
 
-    def to_polars(self: Dtype):
+    def to_polars(self: "Dtype"):
         import polars as pl
 
         return {
@@ -292,6 +299,7 @@ class Dtype:
             Uint8(): pl.UInt8,
             Float64(): pl.Float64,
             Float32(): pl.Float32,
+            Decimal(): pl.Decimal(scale=10),  # Arbitrary precision
             String(): pl.Utf8,
             Bool(): pl.Boolean,
             Datetime(): pl.Datetime("us"),
@@ -314,7 +322,7 @@ class Float64(Float): ...
 class Float32(Float): ...
 
 
-class Decimal(Dtype): ...
+class Decimal(Float): ...
 
 
 class Int(Dtype):
@@ -369,7 +377,7 @@ class NullType(Dtype): ...
 
 
 class List(Dtype):
-    def __init__(self, inner: Dtype):
+    def __init__(self, inner: "Dtype"):
         self.inner = inner
 
     def __eq__(self, rhs):
