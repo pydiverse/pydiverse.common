@@ -1,7 +1,5 @@
 # Copyright (c) QuantCo and pydiverse contributors 2025-2025
 # SPDX-License-Identifier: BSD-3-Clause
-from __future__ import annotations
-
 from enum import Enum
 
 
@@ -40,7 +38,7 @@ class Dtype:
         )
 
     @staticmethod
-    def from_sql(sql_type) -> Dtype:
+    def from_sql(sql_type) -> "Dtype":
         import sqlalchemy as sqa
 
         if isinstance(sql_type, sqa.SmallInteger):
@@ -80,7 +78,7 @@ class Dtype:
         raise TypeError
 
     @staticmethod
-    def from_pandas(pandas_type) -> Dtype:
+    def from_pandas(pandas_type) -> "Dtype":
         import numpy as np
         import pandas as pd
 
@@ -130,7 +128,7 @@ class Dtype:
         raise TypeError
 
     @staticmethod
-    def from_arrow(arrow_type) -> Dtype:
+    def from_arrow(arrow_type) -> "Dtype":
         import pyarrow as pa
 
         if pa.types.is_signed_integer(arrow_type):
@@ -177,7 +175,7 @@ class Dtype:
         raise TypeError
 
     @staticmethod
-    def from_polars(polars_type) -> Dtype:
+    def from_polars(polars_type) -> "Dtype":
         import polars as pl
 
         if isinstance(polars_type, pl.List):
@@ -287,7 +285,7 @@ class Dtype:
             Datetime(): pa.timestamp("us"),
         }[self]
 
-    def to_polars(self: Dtype):
+    def to_polars(self: "Dtype"):
         import polars as pl
 
         return {
@@ -379,7 +377,7 @@ class NullType(Dtype): ...
 
 
 class List(Dtype):
-    def __init__(self, inner: Dtype):
+    def __init__(self, inner: "Dtype"):
         self.inner = inner
 
     def __eq__(self, rhs):
