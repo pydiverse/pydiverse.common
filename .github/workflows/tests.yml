@@ -33,9 +33,11 @@ jobs:
           - ubuntu-latest
         environment:
           - py310
-          - py311
-          - py312
           - py313
+          - py310all
+          - py311all
+          - py312all
+          - py313all
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4

@@ -16,11 +16,8 @@ pip = "*"
 hatchling = "*"
 
 [dependencies]
-python = ">=3.9"
-polars = ">=0.19, <2"
-pandas = ">=2"
-SQLAlchemy = ">=1.4.39, <3"
-pyarrow = ">=11.0.0"
+python = ">=3.10.18,<3.14"
+python-box = ">=7.3.2,<8"
 
 [feature.dev.dependencies]
 pre-commit = ">=3"
@@ -28,6 +25,12 @@ pre-commit-hooks = "*"
 pixi-pycharm = ">=0.0.6"
 pytest = ">=7.1.2"
 pytest-xdist = ">=2.5.0"
+# optional dependencies
+structlog = ">=25.2.0,<26"
+polars = ">=0.19, <2"
+pandas = ">=2"
+sqlalchemy = ">=1.4.39, <3"
+pyarrow = ">=11.0.0"
 
 [feature.release.dependencies]
 hatch = ">=1.12.0"
@@ -79,10 +82,12 @@ python = "3.13.*"
 
 [environments]
 default = ["py312", "dev"]
-py310 = ["py310", "dev"]
-py311 = ["py311", "dev"]
-py312 = ["py312", "dev"]
-py313 = ["py313", "dev"]
+py310 = ["py310"]
+py313 = ["py313"]
+py310all = ["py310", "dev"]
+py311all = ["py311", "dev"]
+py312all = ["py312", "dev"]
+py313all = ["py313", "dev"]
 docs = ["docs"]
 lint = { features = ["lint"], no-default-feature = true }
 release = { features = ["release"], no-default-feature = true }
