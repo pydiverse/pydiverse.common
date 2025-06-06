@@ -25,7 +25,8 @@ pre-commit-hooks = "*"
 pixi-pycharm = ">=0.0.6"
 pytest = ">=7.1.2"
 pytest-xdist = ">=2.5.0"
-# optional dependencies
+
+[feature.optional.dependencies]
 structlog = ">=25.2.0,<26"
 polars = ">=0.19, <2"
 pandas = ">=2"
@@ -81,13 +82,13 @@ python = "3.12.*"
 python = "3.13.*"
 
 [environments]
-default = ["py312", "dev"]
-py310 = ["py310"]
-py313 = ["py313"]
-py310all = ["py310", "dev"]
-py311all = ["py311", "dev"]
-py312all = ["py312", "dev"]
-py313all = ["py313", "dev"]
+default = ["py312", "dev", "optional"]
+py310 = ["py310", "dev"]
+py313 = ["py313", "dev"]
+py310all = ["py310", "dev", "optional"]
+py311all = ["py311", "dev", "optional"]
+py312all = ["py312", "dev", "optional"]
+py313all = ["py313", "dev", "optional"]
 docs = ["docs"]
 lint = { features = ["lint"], no-default-feature = true }
 release = { features = ["release"], no-default-feature = true }
