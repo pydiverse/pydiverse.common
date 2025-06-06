@@ -1,6 +1,6 @@
 [project]
 name = "pydiverse-common"
-version = "0.1.0"
+version = "0.2.0"
 description = "Common functionality shared between pydiverse libraries"
 authors = [
   { name = "QuantCo, Inc." },
@@ -16,7 +16,6 @@ classifiers = [
   "License :: OSI Approved :: BSD License",
   "Programming Language :: SQL",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -26,24 +25,25 @@ classifiers = [
   "Topic :: Software Development",
 ]
 
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pydiverse"]
 
 [tool.ruff]
+fix = true
+extend-exclude = ["docs/*"]
+
+[tool.ruff.lint]
 select = ["F", "E", "UP", "W", "I001", "I002", "B", "A"]
 ignore = ["B028"]
-extend-exclude = ["docs/*"]
-ignore-init-module-imports = true
-fix = true
-target-version = "py38"
+# 'ignore-init-module-imports' is deprecated and removed per warning
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 #"__init__.py" = ["F401", "F403"]
 #"tests/*" = ["F403", "F405"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["pydiverse"]
 
 [build-system]
