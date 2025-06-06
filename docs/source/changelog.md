@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (2025-04-dd)
+## 0.2.0 (2025-06-06)
 - moved many utility functions from `pydiverse.pipedag` to `pydiverse.common`;
     this includes deep_map, ComputationTracer, @disposable, @requires, stable_hash,
     load_object, and structlog initialization
