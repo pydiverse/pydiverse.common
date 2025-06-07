@@ -20,10 +20,10 @@ from pydiverse.common import (
     Int64,
     String,
     Time,
-    Uint8,
-    Uint16,
-    Uint32,
-    Uint64,
+    UInt8,
+    UInt16,
+    UInt32,
+    UInt64,
 )
 
 
@@ -37,10 +37,10 @@ def test_dtype_from_pyarrow():
     assert_conversion(pa.int16(), Int16())
     assert_conversion(pa.int8(), Int8())
 
-    assert_conversion(pa.uint64(), Uint64())
-    assert_conversion(pa.uint32(), Uint32())
-    assert_conversion(pa.uint16(), Uint16())
-    assert_conversion(pa.uint8(), Uint8())
+    assert_conversion(pa.uint64(), UInt64())
+    assert_conversion(pa.uint32(), UInt32())
+    assert_conversion(pa.uint16(), UInt16())
+    assert_conversion(pa.uint8(), UInt8())
 
     assert_conversion(pa.float64(), Float64())
     assert_conversion(pa.float32(), Float32())
@@ -73,10 +73,10 @@ def test_dtype_to_pyarrow():
     assert_conversion(Int16(), pa.int16())
     assert_conversion(Int8(), pa.int8())
 
-    assert_conversion(Uint64(), pa.uint64())
-    assert_conversion(Uint32(), pa.uint32())
-    assert_conversion(Uint16(), pa.uint16())
-    assert_conversion(Uint8(), pa.uint8())
+    assert_conversion(UInt64(), pa.uint64())
+    assert_conversion(UInt32(), pa.uint32())
+    assert_conversion(UInt16(), pa.uint16())
+    assert_conversion(UInt8(), pa.uint8())
 
     assert_conversion(Float64(), pa.float64())
     assert_conversion(Float32(), pa.float32())

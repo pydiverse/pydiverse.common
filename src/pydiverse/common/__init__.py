@@ -20,10 +20,10 @@ from .dtypes import (
     PandasBackend,
     String,
     Time,
-    Uint8,
-    Uint16,
-    Uint32,
-    Uint64,
+    UInt8,
+    UInt16,
+    UInt32,
+    UInt64,
 )
 
 __all__ = [
@@ -44,10 +44,10 @@ __all__ = [
     "NullType",
     "String",
     "Time",
-    "Uint8",
-    "Uint16",
-    "Uint32",
-    "Uint64",
+    "UInt8",
+    "UInt16",
+    "UInt32",
+    "UInt64",
     "List",
     "PandasBackend",
 ]

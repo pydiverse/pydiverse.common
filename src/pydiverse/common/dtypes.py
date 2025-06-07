@@ -102,13 +102,13 @@ class Dtype:
             raise TypeError
         if pd.api.types.is_unsigned_integer_dtype(pandas_type):
             if is_np_dtype(pandas_type, np.uint64):
-                return Uint64()
+                return UInt64()
             elif is_np_dtype(pandas_type, np.uint32):
-                return Uint32()
+                return UInt32()
             elif is_np_dtype(pandas_type, np.uint16):
-                return Uint16()
+                return UInt16()
             elif is_np_dtype(pandas_type, np.uint8):
-                return Uint8()
+                return UInt8()
             raise TypeError
         if pd.api.types.is_float_dtype(pandas_type):
             if is_np_dtype(pandas_type, np.float64):
@@ -143,13 +143,13 @@ class Dtype:
             raise TypeError
         if pa.types.is_unsigned_integer(arrow_type):
             if pa.types.is_uint64(arrow_type):
-                return Uint64()
+                return UInt64()
             if pa.types.is_uint32(arrow_type):
-                return Uint32()
+                return UInt32()
             if pa.types.is_uint16(arrow_type):
-                return Uint16()
+                return UInt16()
             if pa.types.is_uint8(arrow_type):
-                return Uint8()
+                return UInt8()
             raise TypeError
         if pa.types.is_floating(arrow_type):
             if pa.types.is_float64(arrow_type):
@@ -186,10 +186,10 @@ class Dtype:
             pl.Int32: Int32(),
             pl.Int16: Int16(),
             pl.Int8: Int8(),
-            pl.UInt64: Uint64(),
-            pl.UInt32: Uint32(),
-            pl.UInt16: Uint16(),
-            pl.UInt8: Uint8(),
+            pl.UInt64: UInt64(),
+            pl.UInt32: UInt32(),
+            pl.UInt16: UInt16(),
+            pl.UInt8: UInt8(),
             pl.Float64: Float64(),
             pl.Float32: Float32(),
             pl.Decimal: Decimal(),
@@ -212,10 +212,10 @@ class Dtype:
             Int16(): sqa.SmallInteger(),
             Int32(): sqa.Integer(),
             Int64(): sqa.BigInteger(),
-            Uint8(): sqa.SmallInteger(),
-            Uint16(): sqa.Integer(),
-            Uint32(): sqa.BigInteger(),
-            Uint64(): sqa.BigInteger(),
+            UInt8(): sqa.SmallInteger(),
+            UInt16(): sqa.Integer(),
+            UInt32(): sqa.BigInteger(),
+            UInt64(): sqa.BigInteger(),
             Float(): sqa.Float(53),  # we default to 64 bit
             Float32(): sqa.Float(24),
             Float64(): sqa.Float(53),
@@ -252,10 +252,10 @@ class Dtype:
             Int16(): pd.Int16Dtype(),
             Int32(): pd.Int32Dtype(),
             Int64(): pd.Int64Dtype(),
-            Uint8(): pd.UInt8Dtype(),
-            Uint16(): pd.UInt16Dtype(),
-            Uint32(): pd.UInt32Dtype(),
-            Uint64(): pd.UInt64Dtype(),
+            UInt8(): pd.UInt8Dtype(),
+            UInt16(): pd.UInt16Dtype(),
+            UInt32(): pd.UInt32Dtype(),
+            UInt64(): pd.UInt64Dtype(),
             Float(): pd.Float64Dtype(),  # we default to 64 bit
             Float32(): pd.Float32Dtype(),
             Float64(): pd.Float64Dtype(),
@@ -276,10 +276,10 @@ class Dtype:
             Int16(): pa.int16(),
             Int32(): pa.int32(),
             Int64(): pa.int64(),
-            Uint8(): pa.uint8(),
-            Uint16(): pa.uint16(),
-            Uint32(): pa.uint32(),
-            Uint64(): pa.uint64(),
+            UInt8(): pa.uint8(),
+            UInt16(): pa.uint16(),
+            UInt32(): pa.uint32(),
+            UInt64(): pa.uint64(),
             Float(): pa.float64(),  # we default to 64 bit
             Float32(): pa.float32(),
             Float64(): pa.float64(),
@@ -300,10 +300,10 @@ class Dtype:
             Int32(): pl.Int32,
             Int16(): pl.Int16,
             Int8(): pl.Int8,
-            Uint64(): pl.UInt64,
-            Uint32(): pl.UInt32,
-            Uint16(): pl.UInt16,
-            Uint8(): pl.UInt8,
+            UInt64(): pl.UInt64,
+            UInt32(): pl.UInt32,
+            UInt16(): pl.UInt16,
+            UInt8(): pl.UInt8,
             Float(): pl.Float64,  # we default to 64 bit
             Float64(): pl.Float64,
             Float32(): pl.Float32,
@@ -351,16 +351,16 @@ class Int16(Int): ...
 class Int8(Int): ...
 
 
-class Uint64(Int): ...
+class UInt64(Int): ...
 
 
-class Uint32(Int): ...
+class UInt32(Int): ...
 
 
-class Uint16(Int): ...
+class UInt16(Int): ...
 
 
-class Uint8(Int): ...
+class UInt8(Int): ...
 
 
 class String(Dtype): ...

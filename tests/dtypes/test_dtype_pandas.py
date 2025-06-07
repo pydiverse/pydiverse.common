@@ -28,10 +28,10 @@ from pydiverse.common import (
     PandasBackend,
     String,
     Time,
-    Uint8,
-    Uint16,
-    Uint32,
-    Uint64,
+    UInt8,
+    UInt16,
+    UInt32,
+    UInt64,
 )
 
 
@@ -57,10 +57,10 @@ def test_dtype_from_pandas():
     assert_conversion(np.int16, Int16())
     assert_conversion(np.int8, Int8())
 
-    assert_conversion(np.uint64, Uint64())
-    assert_conversion(np.uint32, Uint32())
-    assert_conversion(np.uint16, Uint16())
-    assert_conversion(np.uint8, Uint8())
+    assert_conversion(np.uint64, UInt64())
+    assert_conversion(np.uint32, UInt32())
+    assert_conversion(np.uint16, UInt16())
+    assert_conversion(np.uint8, UInt8())
 
     assert_conversion(np.floating, Float64())
     assert_conversion(np.float64, Float64())
@@ -79,10 +79,10 @@ def test_dtype_from_pandas():
     assert_conversion(pd.Int16Dtype(), Int16())
     assert_conversion(pd.Int8Dtype(), Int8())
 
-    assert_conversion(pd.UInt64Dtype(), Uint64())
-    assert_conversion(pd.UInt32Dtype(), Uint32())
-    assert_conversion(pd.UInt16Dtype(), Uint16())
-    assert_conversion(pd.UInt8Dtype(), Uint8())
+    assert_conversion(pd.UInt64Dtype(), UInt64())
+    assert_conversion(pd.UInt32Dtype(), UInt32())
+    assert_conversion(pd.UInt16Dtype(), UInt16())
+    assert_conversion(pd.UInt8Dtype(), UInt8())
 
     assert_conversion(pd.Float64Dtype(), Float64())
     assert_conversion(pd.Float32Dtype(), Float32())
@@ -101,10 +101,10 @@ def test_dtype_to_pandas_numpy():
     assert_conversion(Int16(), pd.Int16Dtype())
     assert_conversion(Int8(), pd.Int8Dtype())
 
-    assert_conversion(Uint64(), pd.UInt64Dtype())
-    assert_conversion(Uint32(), pd.UInt32Dtype())
-    assert_conversion(Uint16(), pd.UInt16Dtype())
-    assert_conversion(Uint8(), pd.UInt8Dtype())
+    assert_conversion(UInt64(), pd.UInt64Dtype())
+    assert_conversion(UInt32(), pd.UInt32Dtype())
+    assert_conversion(UInt16(), pd.UInt16Dtype())
+    assert_conversion(UInt8(), pd.UInt8Dtype())
 
     assert_conversion(String(), pd.StringDtype())
     assert_conversion(Bool(), pd.BooleanDtype())
@@ -130,10 +130,10 @@ def test_dtype_to_pandas_pyarrow():
     assert_conversion(Int16(), pa.int16())
     assert_conversion(Int8(), pa.int8())
 
-    assert_conversion(Uint64(), pa.uint64())
-    assert_conversion(Uint32(), pa.uint32())
-    assert_conversion(Uint16(), pa.uint16())
-    assert_conversion(Uint8(), pa.uint8())
+    assert_conversion(UInt64(), pa.uint64())
+    assert_conversion(UInt32(), pa.uint32())
+    assert_conversion(UInt16(), pa.uint16())
+    assert_conversion(UInt8(), pa.uint8())
 
     assert_conversion(String(), pd.StringDtype(storage="pyarrow"))
     assert_conversion(Bool(), pa.bool_())

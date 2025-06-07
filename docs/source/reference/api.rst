@@ -24,9 +24,9 @@ Public
 .. autoclass:: NullType
 .. autoclass:: String
 .. autoclass:: Time
-.. autoclass:: Uint8
-.. autoclass:: Uint16
-.. autoclass:: Uint32
-.. autoclass:: Uint64
+.. autoclass:: UInt8
+.. autoclass:: UInt16
+.. autoclass:: UInt32
+.. autoclass:: UInt64
 .. autoclass:: List
 .. autoclass:: PandasBackend
