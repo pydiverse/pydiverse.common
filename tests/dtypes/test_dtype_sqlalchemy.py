@@ -15,10 +15,10 @@ from pydiverse.common import (
     Int64,
     String,
     Time,
-    Uint8,
-    Uint16,
-    Uint32,
-    Uint64,
+    UInt8,
+    UInt16,
+    UInt32,
+    UInt64,
 )
 
 try:
@@ -63,10 +63,10 @@ def test_dtype_to_sqlalchemy():
     assert_conversion(Int16(), sa.SmallInteger)
     assert_conversion(Int8(), sa.SmallInteger)
 
-    assert_conversion(Uint64(), sa.BigInteger)
-    assert_conversion(Uint32(), sa.BigInteger)
-    assert_conversion(Uint16(), sa.Integer)
-    assert_conversion(Uint8(), sa.SmallInteger)
+    assert_conversion(UInt64(), sa.BigInteger)
+    assert_conversion(UInt32(), sa.BigInteger)
+    assert_conversion(UInt16(), sa.Integer)
+    assert_conversion(UInt8(), sa.SmallInteger)
 
     assert_conversion(Float64(), sa.Float)
     assert_conversion(Float32(), sa.Float)

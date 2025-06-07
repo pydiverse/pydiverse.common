@@ -17,10 +17,10 @@ from pydiverse.common import (
     Int64,
     String,
     Time,
-    Uint8,
-    Uint16,
-    Uint32,
-    Uint64,
+    UInt8,
+    UInt16,
+    UInt32,
+    UInt64,
 )
 
 pl = pytest.importorskip("polars")
@@ -38,10 +38,10 @@ def test_dtype_from_polars():
     assert_conversion(pl.Int16, Int16())
     assert_conversion(pl.Int8, Int8())
 
-    assert_conversion(pl.UInt64, Uint64())
-    assert_conversion(pl.UInt32, Uint32())
-    assert_conversion(pl.UInt16, Uint16())
-    assert_conversion(pl.UInt8, Uint8())
+    assert_conversion(pl.UInt64, UInt64())
+    assert_conversion(pl.UInt32, UInt32())
+    assert_conversion(pl.UInt16, UInt16())
+    assert_conversion(pl.UInt8, UInt8())
 
     assert_conversion(pl.Float64, Float64())
     assert_conversion(pl.Float32, Float32())
@@ -66,10 +66,10 @@ def test_dtype_to_polars():
     assert_conversion(Int16(), pl.Int16)
     assert_conversion(Int8(), pl.Int8)
 
-    assert_conversion(Uint64(), pl.UInt64)
-    assert_conversion(Uint32(), pl.UInt32)
-    assert_conversion(Uint16(), pl.UInt16)
-    assert_conversion(Uint8(), pl.UInt8)
+    assert_conversion(UInt64(), pl.UInt64)
+    assert_conversion(UInt32(), pl.UInt32)
+    assert_conversion(UInt16(), pl.UInt16)
+    assert_conversion(UInt8(), pl.UInt8)
 
     assert_conversion(Float64(), pl.Float64)
     assert_conversion(Float32(), pl.Float32)

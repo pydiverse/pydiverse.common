@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0 (2025-06-08)
+- rename Uint type to UInt
+
 ## 0.2.1 (2025-06-06)
 - also support to_xxx() for generic Int and Float Dtype classes
 
