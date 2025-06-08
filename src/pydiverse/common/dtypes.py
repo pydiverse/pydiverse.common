@@ -73,8 +73,8 @@ class Dtype:
         if isinstance(sql_type, sqa.Interval):
             return Duration()
         if isinstance(sql_type, sqa.ARRAY):
-            return List(Dtype.from_sql(sql_type.item_type.from_sql))
-        if isinstance(sql_type, sqa.Null):
+            return List(Dtype.from_sql(sql_type.item_type))
+        if isinstance(sql_type, sqa.types.NullType):
             return NullType()
 
         raise TypeError
@@ -127,7 +127,7 @@ class Dtype:
             return Datetime()
         if pd.api.types.is_timedelta64_dtype(pandas_type):
             return Duration()
-        # we don't know any decimal/time dtypes in pandas if column is not
+        # we don't know any decimal/time/null dtypes in pandas if column is not
         # arrow backed
 
         raise TypeError
@@ -179,6 +179,10 @@ class Dtype:
             return Time()
         if pa.types.is_duration(arrow_type):
             return Duration()
+        if pa.types.is_null(arrow_type):
+            return NullType()
+        if pa.types.is_list(arrow_type):
+            return List(Dtype.from_arrow(arrow_type.value_type))
         raise TypeError
 
     @staticmethod
@@ -249,10 +253,16 @@ class Dtype:
     def to_pandas_nullable(self, backend: PandasBackend = PandasBackend.ARROW):
         import pandas as pd
 
-        if self == Time():
-            if backend == PandasBackend.ARROW:
-                return pd.ArrowDtype(self.to_arrow())
+        if backend == PandasBackend.ARROW:
+            return pd.ArrowDtype(self.to_arrow())
+
+        # we don't want to produce object columns
+        if isinstance(self, Time):
             raise TypeError("pandas doesn't have a native time dtype")
+        if isinstance(self, NullType):
+            raise TypeError("pandas doesn't have a native null dtype")
+        if isinstance(self, List):
+            raise TypeError("pandas doesn't have a native list dtype")
 
         return {
             Int(): pd.Int64Dtype(),  # we default to 64 bit
@@ -299,6 +309,7 @@ class Dtype:
             Time(): pa.time64("us"),
             Datetime(): pa.timestamp("us"),
             Duration(): pa.duration("us"),
+            NullType(): pa.null(),
         }[self]
 
     def to_polars(self: "Dtype"):
@@ -416,3 +427,8 @@ class List(Dtype):
         import polars as pl
 
         return pl.List(self.inner.to_polars())
+
+    def to_arrow(self):
+        import pyarrow as pa
+
+        return pa.list_(self.inner.to_arrow())

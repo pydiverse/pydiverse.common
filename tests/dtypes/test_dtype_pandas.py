@@ -5,6 +5,9 @@ import types
 
 import pytest
 
+import pydiverse.common as pdc
+from pydiverse.common.testing import ALL_TYPES
+
 try:
     import numpy as np
     import pandas as pd
@@ -141,3 +144,48 @@ def test_dtype_to_pandas_pyarrow():
     assert_conversion(Date(), pa.date32())
     assert_conversion(Time(), pa.time64("us"))
     assert_conversion(Datetime(), pa.timestamp("us"))
+
+
+@pytest.mark.skipif(np is None, reason="requires pandas, numpy, and pyarrow")
+@pytest.mark.parametrize(
+    "type_",
+    ALL_TYPES,
+)
+def test_all_types_numpy(type_):
+    if type_ is pdc.List:
+        type_obj = type_(pdc.Int64())
+    else:
+        type_obj = type_()
+    if type_ is pdc.NullType:
+        with pytest.raises(TypeError, match="pandas doesn't have a native null dtype"):
+            type_obj.to_pandas(PandasBackend.NUMPY)
+    elif type_ is pdc.Time:
+        with pytest.raises(TypeError, match="pandas doesn't have a native time dtype"):
+            type_obj.to_pandas(PandasBackend.NUMPY)
+    elif type_ is pdc.List:
+        with pytest.raises(TypeError, match="pandas doesn't have a native list dtype"):
+            type_obj.to_pandas(PandasBackend.NUMPY)
+    else:
+        dst_type = type_obj.to_pandas(PandasBackend.NUMPY)
+        back_type = Dtype.from_pandas(dst_type)
+        if type_ is pdc.Decimal:
+            assert isinstance(back_type, pdc.Float64)
+        elif type_ is pdc.Date:
+            assert isinstance(back_type, pdc.Datetime)
+        else:
+            assert isinstance(back_type, type_)
+
+
+@pytest.mark.skipif(np is None, reason="requires pandas, numpy, and pyarrow")
+@pytest.mark.parametrize(
+    "type_",
+    ALL_TYPES,
+)
+def test_all_types_arrow(type_):
+    if type_ is pdc.List:
+        type_obj = type_(pdc.Int64())
+    else:
+        type_obj = type_()
+    dst_type = type_obj.to_pandas(PandasBackend.ARROW)
+    back_type = Dtype.from_pandas(dst_type)
+    assert isinstance(back_type, type_)

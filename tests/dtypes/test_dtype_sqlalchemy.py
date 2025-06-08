@@ -2,10 +2,12 @@
 # SPDX-License-Identifier: BSD-3-Clause
 import pytest
 
+import pydiverse.common as pdc
 from pydiverse.common import (
     Bool,
     Date,
     Datetime,
+    Decimal,
     Dtype,
     Float32,
     Float64,
@@ -20,6 +22,7 @@ from pydiverse.common import (
     UInt32,
     UInt64,
 )
+from pydiverse.common.testing import ALL_TYPES
 
 try:
     import sqlalchemy as sa
@@ -77,3 +80,29 @@ def test_dtype_to_sqlalchemy():
     assert_conversion(Date(), sa.Date)
     assert_conversion(Time(), sa.Time)
     assert_conversion(Datetime(), sa.DateTime)
+
+
+@pytest.mark.skipif(sa is None, reason="requires polars")
+@pytest.mark.parametrize(
+    "type_",
+    ALL_TYPES,
+)
+def test_all_types(type_):
+    if type_ is pdc.List:
+        type_obj = type_(pdc.Int64())
+    else:
+        type_obj = type_()
+    dst_type = type_obj.to_sql()
+    back_type = Dtype.from_sql(dst_type)
+    acceptance_map = {
+        # SQL is a bit less strict about integer precisions
+        Int8: Int16,
+        UInt8: Int16,
+        UInt16: Int32,
+        UInt32: Int64,
+        UInt64: Int64,
+        # we intentionally fetch Decimal as Float since Decimal is more a relational
+        # database thing
+        Decimal: Float64,
+    }
+    assert isinstance(back_type, acceptance_map.get(type_, type_))

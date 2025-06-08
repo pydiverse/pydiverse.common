@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3 (2025-06-08)
+- improved support of None and List type
+- bug fixes in type conversion functions
+
 ## 0.3.2 (2025-06-08)
 - pydiverse.common.__version__ (implemented via importlib.metadata)
 

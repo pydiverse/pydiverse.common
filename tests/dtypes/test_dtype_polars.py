@@ -1,9 +1,9 @@
 # Copyright (c) QuantCo and pydiverse contributors 2025-2025
 # SPDX-License-Identifier: BSD-3-Clause
-from typing import TYPE_CHECKING
 
 import pytest
 
+import pydiverse.common as pdc
 from pydiverse.common import (
     Bool,
     Date,
@@ -22,13 +22,15 @@ from pydiverse.common import (
     UInt32,
     UInt64,
 )
+from pydiverse.common.testing import ALL_TYPES
 
-pl = pytest.importorskip("polars")
-
-if TYPE_CHECKING:
+try:
     import polars as pl
+except ImportError:
+    pl = None
 
 
+@pytest.mark.skipif(pl is None, reason="requires polars")
 def test_dtype_from_polars():
     def assert_conversion(type_, expected):
         assert Dtype.from_polars(type_) == expected
@@ -57,6 +59,7 @@ def test_dtype_from_polars():
     assert_conversion(pl.Datetime("ns"), Datetime())
 
 
+@pytest.mark.skipif(pl is None, reason="requires polars")
 def test_dtype_to_polars():
     def assert_conversion(type_: Dtype, expected):
         assert type_.to_polars() == expected
@@ -80,3 +83,18 @@ def test_dtype_to_polars():
     assert_conversion(Date(), pl.Date)
     assert_conversion(Time(), pl.Time)
     assert_conversion(Datetime(), pl.Datetime("us"))
+
+
+@pytest.mark.skipif(pl is None, reason="requires polars")
+@pytest.mark.parametrize(
+    "type_",
+    ALL_TYPES,
+)
+def test_all_types(type_):
+    if type_ is pdc.List:
+        type_obj = type_(pdc.Int64())
+    else:
+        type_obj = type_()
+    dst_type = type_obj.to_polars()
+    back_type = Dtype.from_polars(dst_type)
+    assert isinstance(back_type, type_)

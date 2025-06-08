@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 import pytest
 
+import pydiverse.common as pdc
+from pydiverse.common.testing import ALL_TYPES
+
 try:
     import pyarrow as pa
 except ImportError:
@@ -87,3 +90,18 @@ def test_dtype_to_pyarrow():
     assert_conversion(Date(), pa.date32())
     assert_conversion(Time(), pa.time64("us"))
     assert_conversion(Datetime(), pa.timestamp("us"))
+
+
+@pytest.mark.skipif(pa is None, reason="requires pandas, numpy, and pyarrow")
+@pytest.mark.parametrize(
+    "type_",
+    ALL_TYPES,
+)
+def test_all_types(type_):
+    if type_ is pdc.List:
+        type_obj = type_(pdc.Int64())
+    else:
+        type_obj = type_()
+    dst_type = type_obj.to_arrow()
+    back_type = Dtype.from_arrow(dst_type)
+    assert isinstance(back_type, type_)
