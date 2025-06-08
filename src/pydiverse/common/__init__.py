@@ -25,8 +25,10 @@ from .dtypes import (
     UInt32,
     UInt64,
 )
+from .version import __version__
 
 __all__ = [
+    "__version__",
     "Dtype",
     "Bool",
     "Date",

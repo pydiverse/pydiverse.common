@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.2 (2025-06-08)
+- pydiverse.common.__version__ (implemented via importlib.metadata)
+
 ## 0.3.1 (2025-06-08)
 - fixed some type conversions (mostly Duration)
 
