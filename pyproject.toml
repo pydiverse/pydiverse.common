@@ -29,14 +29,13 @@ classifiers = [
 packages = ["src/pydiverse"]
 
 [tool.ruff]
-fix = true
 target-version = "py310"
 extend-exclude = ["docs/*"]
+fix = true
 
 [tool.ruff.lint]
 select = ["F", "E", "UP", "W", "I001", "I002", "B", "A"]
-ignore = ["B028"]
-# 'ignore-init-module-imports' is deprecated and removed per warning
+#ignore = ["B028"]
 
 [tool.ruff.lint.per-file-ignores]
 #"__init__.py" = ["F401", "F403"]
