@@ -12,24 +12,33 @@ class Dtype:
     """Base class for all data types."""
 
     def __eq__(self, rhs):
+        """Return ``True`` if this dtype is equal to `rhs`."""
         return isinstance(rhs, Dtype) and type(self) is type(rhs)
 
     def __hash__(self):
+        """Return a hash for this dtype."""
         return hash(type(self))
 
     def __repr__(self):
+        """Return a string representation of this dtype."""
         return self.__class__.__name__
 
     @classmethod
     def is_int(cls):
+        """Return ``True`` if this dtype is an integer type."""
         return False
 
     @classmethod
     def is_float(cls):
+        """Return ``True`` if this dtype is a float type."""
         return False
 
     @classmethod
     def is_subtype(cls, rhs):
+        """Return ``True`` if this dtype is a subtype of `rhs`.
+
+        For example, ``Int8.is_subtype(Int())`` is ``True``.
+        """
         rhs_cls = type(rhs)
         return (
             (cls is rhs_cls)
@@ -39,6 +48,7 @@ class Dtype:
 
     @staticmethod
     def from_sql(sql_type) -> "Dtype":
+        """Convert a SQL type to a Dtype."""
         import sqlalchemy as sqa
 
         if isinstance(sql_type, sqa.SmallInteger):
@@ -81,6 +91,7 @@ class Dtype:
 
     @staticmethod
     def from_pandas(pandas_type) -> "Dtype":
+        """Convert a pandas type to a Dtype."""
         import numpy as np
         import pandas as pd
 
@@ -134,6 +145,7 @@ class Dtype:
 
     @staticmethod
     def from_arrow(arrow_type) -> "Dtype":
+        """Convert a PyArrow type to a Dtype."""
         import pyarrow as pa
 
         if pa.types.is_signed_integer(arrow_type):
@@ -187,6 +199,7 @@ class Dtype:
 
     @staticmethod
     def from_polars(polars_type) -> "Dtype":
+        """Convert a Polars type to a Dtype."""
         import polars as pl
 
         if isinstance(polars_type, pl.List):
@@ -215,6 +228,7 @@ class Dtype:
         }[polars_type.base_type()]
 
     def to_sql(self):
+        """Convert this Dtype to a SQL type."""
         import sqlalchemy as sqa
 
         return {
@@ -241,6 +255,7 @@ class Dtype:
         }[self]
 
     def to_pandas(self, backend: PandasBackend = PandasBackend.ARROW):
+        """Convert this Dtype to a pandas type."""
         import pandas as pd
 
         if backend == PandasBackend.NUMPY:
@@ -251,6 +266,20 @@ class Dtype:
             return pd.ArrowDtype(self.to_arrow())
 
     def to_pandas_nullable(self, backend: PandasBackend = PandasBackend.ARROW):
+        """Convert this Dtype to a pandas nullable type.
+
+        Nullable can be either pandas extension types like StringDtype or ArrowDtype.
+
+        Parameters
+        ----------
+        backend : PandasBackend, optional
+            The pandas backend to use. Defaults to ``PandasBackend.ARROW``.
+            If ``PandasBackend.NUMPY`` is selected, this method will attempt
+            to return a NumPy-backed nullable pandas dtype. Note that
+            Time, NullType, and List will raise a TypeError for the
+            NUMPY backend as pandas doesn't have corresponding native
+            nullable dtypes for these.
+        """
         import pandas as pd
 
         if backend == PandasBackend.ARROW:
@@ -287,6 +316,7 @@ class Dtype:
         }[self]
 
     def to_arrow(self):
+        """Convert this Dtype to a PyArrow type."""
         import pyarrow as pa
 
         return {
@@ -313,6 +343,7 @@ class Dtype:
         }[self]
 
     def to_polars(self: "Dtype"):
+        """Convert this Dtype to a Polars type."""
         import polars as pl
 
         return {
