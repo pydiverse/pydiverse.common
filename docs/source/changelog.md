@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1 (2025-06-08)
+- fixed some type conversions (mostly Duration)
+
 ## 0.3.0 (2025-06-08)
 - rename Uint type to UInt
 

@@ -70,6 +70,8 @@ class Dtype:
             return Time()
         if isinstance(sql_type, sqa.DateTime):
             return Datetime()
+        if isinstance(sql_type, sqa.Interval):
+            return Duration()
         if isinstance(sql_type, sqa.ARRAY):
             return List(Dtype.from_sql(sql_type.item_type.from_sql))
         if isinstance(sql_type, sqa.Null):
@@ -123,7 +125,10 @@ class Dtype:
             return Bool()
         if pd.api.types.is_datetime64_any_dtype(pandas_type):
             return Datetime()
-        # we don't know any decimal dtype in pandas if column is not arrow backed
+        if pd.api.types.is_timedelta64_dtype(pandas_type):
+            return Duration()
+        # we don't know any decimal/time dtypes in pandas if column is not
+        # arrow backed
 
         raise TypeError
 
@@ -172,6 +177,8 @@ class Dtype:
             return Date()
         if pa.types.is_time(arrow_type):
             return Time()
+        if pa.types.is_duration(arrow_type):
+            return Duration()
         raise TypeError
 
     @staticmethod
@@ -225,6 +232,7 @@ class Dtype:
             Date(): sqa.Date(),
             Time(): sqa.Time(),
             Datetime(): sqa.DateTime(),
+            Duration(): sqa.Interval(),
             NullType(): sqa.types.NullType(),
         }[self]
 
@@ -263,8 +271,9 @@ class Dtype:
             String(): pd.StringDtype(),
             Bool(): pd.BooleanDtype(),
             Date(): "datetime64[s]",
-            # Time() not supported
             Datetime(): "datetime64[us]",
+            Time(): "timedelta64[us]",
+            Duration(): "timedelta64[us]",
         }[self]
 
     def to_arrow(self):
@@ -289,6 +298,7 @@ class Dtype:
             Date(): pa.date32(),
             Time(): pa.time64("us"),
             Datetime(): pa.timestamp("us"),
+            Duration(): pa.duration("us"),
         }[self]
 
     def to_polars(self: "Dtype"):
@@ -311,8 +321,8 @@ class Dtype:
             String(): pl.Utf8,
             Bool(): pl.Boolean,
             Datetime(): pl.Datetime("us"),
-            Duration(): pl.Duration,
-            Time(): pl.Time,
+            Duration(): pl.Duration("us"),
+            Time(): pl.Time,  # Polars uses nanoseconds since midnight
             Date(): pl.Date,
             NullType(): pl.Null,
         }[self]
