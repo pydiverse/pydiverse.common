@@ -6888,8 +6888,6 @@ packages:
   - pycparser
   - python >=3.10,<3.11.0a0
   - python_abi 3.10.* *_cp310
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 243532
@@ -6932,8 +6930,6 @@ packages:
   - pycparser
   - python >=3.13.0rc1,<3.14.0a0
   - python_abi 3.13.* *_cp313
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 295514
@@ -6947,8 +6943,6 @@ packages:
   - pycparser
   - python >=3.10,<3.11.0a0
   - python_abi 3.10.* *_cp310
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 260852
@@ -6988,8 +6982,6 @@ packages:
   - pycparser
   - python >=3.13.0rc1,<3.14.0a0
   - python_abi 3.13.* *_cp313
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 314846
@@ -7003,8 +6995,6 @@ packages:
   - pycparser
   - python >=3.10,<3.11.0a0
   - python_abi 3.10.* *_cp310
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 229844
@@ -7044,8 +7034,6 @@ packages:
   - pycparser
   - python >=3.13.0rc1,<3.14.0a0
   - python_abi 3.13.* *_cp313
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 284540
@@ -7060,8 +7048,6 @@ packages:
   - python >=3.10,<3.11.0a0
   - python >=3.10,<3.11.0a0 *_cpython
   - python_abi 3.10.* *_cp310
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 229224
@@ -7104,8 +7090,6 @@ packages:
   - python >=3.13.0rc1,<3.14.0a0
   - python >=3.13.0rc1,<3.14.0a0 *_cp313
   - python_abi 3.13.* *_cp313
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 282115
@@ -7120,8 +7104,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 238887
@@ -7164,8 +7146,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 291828
@@ -14268,6 +14248,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.10.* *_cp310
+  arch: x86_64
+  platform: linux
   license: Python-2.0
   size: 25042108
   timestamp: 1749049293621
@@ -14294,6 +14276,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.11.* *_cp311
+  arch: x86_64
+  platform: linux
   license: Python-2.0
   size: 30629559
   timestamp: 1749050021812
@@ -14346,6 +14330,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
+  arch: x86_64
+  platform: linux
   license: Python-2.0
   size: 31445023
   timestamp: 1749050216615
@@ -14371,6 +14357,8 @@ packages:
   - readline >=8.2,<9.0a0
   - tk >=8.6.13,<8.7.0a0
   - tzdata
+  arch: x86_64
+  platform: linux
   license: Python-2.0
   size: 33268245
   timestamp: 1744665022734
@@ -14397,6 +14385,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.10.* *_cp310
+  arch: aarch64
+  platform: linux
   license: Python-2.0
   size: 13039547
   timestamp: 1749048139656
@@ -14422,6 +14412,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.11.* *_cp311
+  arch: aarch64
+  platform: linux
   license: Python-2.0
   size: 15306062
   timestamp: 1749048115706
@@ -14447,6 +14439,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
+  arch: aarch64
+  platform: linux
   license: Python-2.0
   size: 13738751
   timestamp: 1749047852768
@@ -14471,6 +14465,8 @@ packages:
   - readline >=8.2,<9.0a0
   - tk >=8.6.13,<8.7.0a0
   - tzdata
+  arch: aarch64
+  platform: linux
   license: Python-2.0
   size: 33727843
   timestamp: 1744663385273
@@ -14493,6 +14489,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.10.* *_cp310
+  arch: x86_64
+  platform: osx
   license: Python-2.0
   size: 12921103
   timestamp: 1749048830353
@@ -14514,6 +14512,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.11.* *_cp311
+  arch: x86_64
+  platform: osx
   license: Python-2.0
   size: 15423460
   timestamp: 1749049420299
@@ -14556,6 +14556,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
+  arch: x86_64
+  platform: osx
   license: Python-2.0
   size: 13571569
   timestamp: 1749049058713
@@ -14578,6 +14580,8 @@ packages:
   - readline >=8.2,<9.0a0
   - tk >=8.6.13,<8.7.0a0
   - tzdata
+  arch: x86_64
+  platform: osx
   license: Python-2.0
   size: 13875464
   timestamp: 1744664784298
@@ -14600,6 +14604,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.10.* *_cp310
+  arch: arm64
+  platform: osx
   license: Python-2.0
   size: 12385306
   timestamp: 1749048585934
@@ -14621,6 +14627,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.11.* *_cp311
+  arch: arm64
+  platform: osx
   license: Python-2.0
   size: 14573820
   timestamp: 1749048947732
@@ -14642,6 +14650,8 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
+  arch: arm64
+  platform: osx
   license: Python-2.0
   size: 13009234
   timestamp: 1749048134449
@@ -14664,6 +14674,8 @@ packages:
   - readline >=8.2,<9.0a0
   - tk >=8.6.13,<8.7.0a0
   - tzdata
+  arch: arm64
+  platform: osx
   license: Python-2.0
   size: 12136505
   timestamp: 1744663807953
@@ -14686,6 +14698,8 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - python_abi 3.10.* *_cp310
+  arch: x86_64
+  platform: win
   license: Python-2.0
   size: 15832933
   timestamp: 1749048670944
@@ -14707,6 +14721,8 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - python_abi 3.11.* *_cp311
+  arch: x86_64
+  platform: win
   license: Python-2.0
   size: 18242669
   timestamp: 1749048351218
@@ -14728,6 +14744,8 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - python_abi 3.12.* *_cp312
+  arch: x86_64
+  platform: win
   license: Python-2.0
   size: 15829289
   timestamp: 1749047682640
@@ -14750,6 +14768,8 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
+  arch: x86_64
+  platform: win
   license: Python-2.0
   size: 16614435
   timestamp: 1744663103022
@@ -14765,6 +14785,8 @@ packages:
   - python_abi 3.10.* *_cp310
   - ruamel.yaml
   - toml
+  arch: x86_64
+  platform: linux
   license: MIT
   license_family: MIT
   size: 752684
@@ -14780,6 +14802,8 @@ packages:
   - python_abi 3.11.* *_cp311
   - ruamel.yaml
   - toml
+  arch: x86_64
+  platform: linux
   license: MIT
   license_family: MIT
   size: 774302
@@ -14795,6 +14819,8 @@ packages:
   - python_abi 3.12.* *_cp312
   - ruamel.yaml
   - toml
+  arch: x86_64
+  platform: linux
   license: MIT
   license_family: MIT
   size: 768872
@@ -14810,6 +14836,8 @@ packages:
   - python_abi 3.13.* *_cp313
   - ruamel.yaml
   - toml
+  arch: x86_64
+  platform: linux
   license: MIT
   license_family: MIT
   size: 766775
@@ -14825,6 +14853,8 @@ packages:
   - python_abi 3.10.* *_cp310
   - ruamel.yaml
   - toml
+  arch: aarch64
+  platform: linux
   license: MIT
   license_family: MIT
   size: 715030
@@ -14840,6 +14870,8 @@ packages:
   - python_abi 3.11.* *_cp311
   - ruamel.yaml
   - toml
+  arch: aarch64
+  platform: linux
   license: MIT
   license_family: MIT
   size: 734401
@@ -14855,6 +14887,8 @@ packages:
   - python_abi 3.12.* *_cp312
   - ruamel.yaml
   - toml
+  arch: aarch64
+  platform: linux
   license: MIT
   license_family: MIT
   size: 726035
@@ -14870,6 +14904,8 @@ packages:
   - python_abi 3.13.* *_cp313
   - ruamel.yaml
   - toml
+  arch: aarch64
+  platform: linux
   license: MIT
   license_family: MIT
   size: 724285
@@ -14884,6 +14920,8 @@ packages:
   - python_abi 3.10.* *_cp310
   - ruamel.yaml
   - toml
+  arch: x86_64
+  platform: osx
   license: MIT
   license_family: MIT
   size: 686709
@@ -14898,6 +14936,8 @@ packages:
   - python_abi 3.11.* *_cp311
   - ruamel.yaml
   - toml
+  arch: x86_64
+  platform: osx
   license: MIT
   license_family: MIT
   size: 698995
@@ -14912,6 +14952,8 @@ packages:
   - python_abi 3.12.* *_cp312
   - ruamel.yaml
   - toml
+  arch: x86_64
+  platform: osx
   license: MIT
   license_family: MIT
   size: 685217
@@ -14926,6 +14968,8 @@ packages:
   - python_abi 3.13.* *_cp313
   - ruamel.yaml
   - toml
+  arch: x86_64
+  platform: osx
   license: MIT
   license_family: MIT
   size: 687987
@@ -14941,6 +14985,8 @@ packages:
   - python_abi 3.10.* *_cp310
   - ruamel.yaml
   - toml
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   size: 683806
@@ -14956,6 +15002,8 @@ packages:
   - python_abi 3.11.* *_cp311
   - ruamel.yaml
   - toml
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   size: 691227
@@ -14971,6 +15019,8 @@ packages:
   - python_abi 3.12.* *_cp312
   - ruamel.yaml
   - toml
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   size: 681412
@@ -14986,6 +15036,8 @@ packages:
   - python_abi 3.13.* *_cp313
   - ruamel.yaml
   - toml
+  arch: arm64
+  platform: osx
   license: MIT
   license_family: MIT
   size: 684872
@@ -15002,6 +15054,8 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
+  arch: x86_64
+  platform: win
   license: MIT
   license_family: MIT
   size: 607423
@@ -15018,6 +15072,8 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
+  arch: x86_64
+  platform: win
   license: MIT
   license_family: MIT
   size: 628594
@@ -15034,6 +15090,8 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
+  arch: x86_64
+  platform: win
   license: MIT
   license_family: MIT
   size: 607016
@@ -15050,6 +15108,8 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
+  arch: x86_64
+  platform: win
   license: MIT
   license_family: MIT
   size: 604818
@@ -15199,8 +15259,6 @@ packages:
   - python >=3.10,<3.11.0a0
   - python_abi 3.10.* *_cp310
   - yaml >=0.2.5,<0.3.0a0
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 182769
@@ -15240,8 +15298,6 @@ packages:
   - python >=3.13,<3.14.0a0
   - python_abi 3.13.* *_cp313
   - yaml >=0.2.5,<0.3.0a0
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 205919
@@ -15255,8 +15311,6 @@ packages:
   - python >=3.10,<3.11.0a0 *_cpython
   - python_abi 3.10.* *_cp310
   - yaml >=0.2.5,<0.3.0a0
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 174914
@@ -15296,8 +15350,6 @@ packages:
   - python >=3.13,<3.14.0a0 *_cp313
   - python_abi 3.13.* *_cp313
   - yaml >=0.2.5,<0.3.0a0
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 198985
@@ -15310,8 +15362,6 @@ packages:
   - python >=3.10,<3.11.0a0
   - python_abi 3.10.* *_cp310
   - yaml >=0.2.5,<0.3.0a0
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 168613
@@ -15348,8 +15398,6 @@ packages:
   - python >=3.13,<3.14.0a0
   - python_abi 3.13.* *_cp313
   - yaml >=0.2.5,<0.3.0a0
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 196573
@@ -15363,8 +15411,6 @@ packages:
   - python >=3.10,<3.11.0a0 *_cpython
   - python_abi 3.10.* *_cp310
   - yaml >=0.2.5,<0.3.0a0
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 166853
@@ -15404,8 +15450,6 @@ packages:
   - python >=3.13,<3.14.0a0 *_cp313
   - python_abi 3.13.* *_cp313
   - yaml >=0.2.5,<0.3.0a0
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 194243
@@ -15420,8 +15464,6 @@ packages:
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
   - yaml >=0.2.5,<0.3.0a0
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 157941
@@ -15464,8 +15506,6 @@ packages:
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
   - yaml >=0.2.5,<0.3.0a0
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 182783
@@ -17377,8 +17417,6 @@ packages:
   - libstdcxx >=13
   - python >=3.10,<3.11.0a0
   - python_abi 3.10.* *_cp310
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 13756
@@ -17421,8 +17459,6 @@ packages:
   - libstdcxx >=13
   - python >=3.13.0rc1,<3.14.0a0
   - python_abi 3.13.* *_cp313
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 13916
@@ -17437,8 +17473,6 @@ packages:
   - python >=3.10,<3.11.0a0
   - python >=3.10,<3.11.0a0 *_cpython
   - python_abi 3.10.* *_cp310
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 14690
@@ -17481,8 +17515,6 @@ packages:
   - python >=3.13.0rc1,<3.14.0a0
   - python >=3.13.0rc1,<3.14.0a0 *_cp313
   - python_abi 3.13.* *_cp313
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 14819
@@ -17496,8 +17528,6 @@ packages:
   - libcxx >=17
   - python >=3.10,<3.11.0a0
   - python_abi 3.10.* *_cp310
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 12925
@@ -17537,8 +17567,6 @@ packages:
   - libcxx >=17
   - python >=3.13.0rc1,<3.14.0a0
   - python_abi 3.13.* *_cp313
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 13126
@@ -17553,8 +17581,6 @@ packages:
   - python >=3.10,<3.11.0a0
   - python >=3.10,<3.11.0a0 *_cpython
   - python_abi 3.10.* *_cp310
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 13565
@@ -17597,8 +17623,6 @@ packages:
   - python >=3.13.0rc1,<3.14.0a0
   - python >=3.13.0rc1,<3.14.0a0 *_cp313
   - python_abi 3.13.* *_cp313
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 13689
@@ -17613,8 +17637,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 17065
@@ -17657,8 +17679,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 17210

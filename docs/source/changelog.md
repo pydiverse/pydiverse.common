@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.4 (2025-06-10)
+- fixed pypi package dependencies
+
 ## 0.3.3 (2025-06-08)
 - improved support of None and List type
 - bug fixes in type conversion functions
