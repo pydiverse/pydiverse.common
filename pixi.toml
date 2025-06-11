@@ -63,6 +63,7 @@ taplo = "*"
 pre-commit-hooks = "*"
 typos = "*"
 conda-deny = "*"
+go-yq = "*"
 
 [feature.lint.tasks]
 #commitit-install = "commitit install"
