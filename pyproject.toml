@@ -25,7 +25,7 @@ classifiers = [
   "Topic :: Software Development",
 ]
 requires-python = ">=3.10,<3.14"
-dependencies = ["python-box>=7.3.2,<8.0.0"]
+dependencies = ["python-box >=7.3.2,<8"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pydiverse"]

@@ -63,6 +63,7 @@ taplo = "*"
 pre-commit-hooks = "*"
 typos = "*"
 conda-deny = "*"
+go-yq = "*"
 
 [feature.lint.tasks]
 #commitit-install = "commitit install"
@@ -70,6 +71,7 @@ conda-deny = "*"
 pre-commit-install = "pre-commit install"
 pre-commit-run = "pre-commit run -a"
 conda-deny = "conda-deny check"
+check-deps = "sh -c .github/scripts/check_deps.sh"
 
 [feature.py310.dependencies]
 python = "3.10.*"
