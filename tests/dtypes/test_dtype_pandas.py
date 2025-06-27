@@ -21,9 +21,13 @@ from pydiverse.common import (
     Bool,
     Date,
     Datetime,
+    Decimal,
     Dtype,
+    Enum,
+    Float,
     Float32,
     Float64,
+    Int,
     Int8,
     Int16,
     Int32,
@@ -154,8 +158,11 @@ def test_dtype_to_pandas_pyarrow():
 def test_all_types_numpy(type_):
     if type_ is pdc.List:
         type_obj = type_(pdc.Int64())
+    elif type_ is pdc.Enum:
+        type_obj = type_("a", "b", "c")
     else:
         type_obj = type_()
+
     if type_ is pdc.NullType:
         with pytest.raises(TypeError, match="pandas doesn't have a native null dtype"):
             type_obj.to_pandas(PandasBackend.NUMPY)
@@ -166,14 +173,17 @@ def test_all_types_numpy(type_):
         with pytest.raises(TypeError, match="pandas doesn't have a native list dtype"):
             type_obj.to_pandas(PandasBackend.NUMPY)
     else:
+        acceptance_map = {
+            Float: Float64(),
+            Int: Int64(),
+            Decimal: Float64(),
+            Date: Datetime(),
+        }
+
         dst_type = type_obj.to_pandas(PandasBackend.NUMPY)
         back_type = Dtype.from_pandas(dst_type)
-        if type_ is pdc.Decimal:
-            assert isinstance(back_type, pdc.Float64)
-        elif type_ is pdc.Date:
-            assert isinstance(back_type, pdc.Datetime)
-        else:
-            assert isinstance(back_type, type_)
+
+        assert back_type == acceptance_map.get(type_, type_obj)
 
 
 @pytest.mark.skipif(np is None, reason="requires pandas, numpy, and pyarrow")
@@ -184,8 +194,17 @@ def test_all_types_numpy(type_):
 def test_all_types_arrow(type_):
     if type_ is pdc.List:
         type_obj = type_(pdc.Int64())
+    elif type_ is pdc.Enum:
+        type_obj = type_("a", "b", "c")
     else:
         type_obj = type_()
+
+    acceptance_map = {
+        Enum: String(),
+        Float: Float64(),
+        Int: Int64(),
+    }
+
     dst_type = type_obj.to_pandas(PandasBackend.ARROW)
     back_type = Dtype.from_pandas(dst_type)
-    assert isinstance(back_type, type_)
+    assert back_type == acceptance_map.get(type_, type_obj)

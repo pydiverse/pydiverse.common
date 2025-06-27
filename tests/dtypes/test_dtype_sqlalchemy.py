@@ -9,8 +9,11 @@ from pydiverse.common import (
     Datetime,
     Decimal,
     Dtype,
+    Enum,
+    Float,
     Float32,
     Float64,
+    Int,
     Int8,
     Int16,
     Int32,
@@ -82,7 +85,7 @@ def test_dtype_to_sqlalchemy():
     assert_conversion(Datetime(), sa.DateTime)
 
 
-@pytest.mark.skipif(sa is None, reason="requires polars")
+@pytest.mark.skipif(sa is None, reason="requires sqlalchemy")
 @pytest.mark.parametrize(
     "type_",
     ALL_TYPES,
@@ -90,19 +93,25 @@ def test_dtype_to_sqlalchemy():
 def test_all_types(type_):
     if type_ is pdc.List:
         type_obj = type_(pdc.Int64())
+    elif type_ is pdc.Enum:
+        type_obj = type_("a", "b", "c")
     else:
         type_obj = type_()
     dst_type = type_obj.to_sql()
     back_type = Dtype.from_sql(dst_type)
     acceptance_map = {
         # SQL is a bit less strict about integer precisions
-        Int8: Int16,
-        UInt8: Int16,
-        UInt16: Int32,
-        UInt32: Int64,
-        UInt64: Int64,
+        Int8: Int16(),
+        UInt8: Int16(),
+        UInt16: Int32(),
+        UInt32: Int64(),
+        UInt64: Int64(),
         # we intentionally fetch Decimal as Float since Decimal is more a relational
         # database thing
-        Decimal: Float64,
+        Decimal: Float64(),
+        Float: Float64(),
+        Int: Int64(),
+        # there is no Enum
+        Enum: String(),
     }
-    assert isinstance(back_type, acceptance_map.get(type_, type_))
+    assert back_type == acceptance_map.get(type_, type_obj)

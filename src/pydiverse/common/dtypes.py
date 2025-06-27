@@ -1,9 +1,9 @@
 # Copyright (c) QuantCo and pydiverse contributors 2025-2025
 # SPDX-License-Identifier: BSD-3-Clause
-from enum import Enum
+import enum
 
 
-class PandasBackend(str, Enum):
+class PandasBackend(str, enum.Enum):
     NUMPY = "numpy"
     ARROW = "arrow"
 
@@ -141,6 +141,9 @@ class Dtype:
         # we don't know any decimal/time/null dtypes in pandas if column is not
         # arrow backed
 
+        if pandas_type.name == "category":
+            return Enum(*pandas_type.categories.to_list())
+
         raise TypeError
 
     @staticmethod
@@ -204,6 +207,8 @@ class Dtype:
 
         if isinstance(polars_type, pl.List):
             return List(Dtype.from_polars(polars_type.inner))
+        if isinstance(polars_type, pl.Enum):
+            return Enum(*polars_type.categories)
 
         return {
             pl.Int64: Int64(),
@@ -224,7 +229,6 @@ class Dtype:
             pl.Date: Date(),
             pl.Null: NullType(),
             pl.Duration: Duration(),
-            pl.Enum: String(),
         }[polars_type.base_type()]
 
     def to_sql(self):
@@ -293,6 +297,9 @@ class Dtype:
         if isinstance(self, List):
             raise TypeError("pandas doesn't have a native list dtype")
 
+        if isinstance(self, Enum):
+            return pd.CategoricalDtype(self.categories)
+
         return {
             Int(): pd.Int64Dtype(),  # we default to 64 bit
             Int8(): pd.Int8Dtype(),
@@ -318,6 +325,9 @@ class Dtype:
     def to_arrow(self):
         """Convert this Dtype to a PyArrow type."""
         import pyarrow as pa
+
+        if isinstance(self, Enum):
+            return pa.string()
 
         return {
             Int(): pa.int64(),  # we default to 64 bit
@@ -463,3 +473,36 @@ class List(Dtype):
         import pyarrow as pa
 
         return pa.list_(self.inner.to_arrow())
+
+
+class Enum(String):
+    def __init__(self, *categories: str):
+        if not all(isinstance(c, str) for c in categories):
+            raise TypeError("arguments for `Enum` must have type `str`")
+        self.categories = list(categories)
+
+    def __eq__(self, rhs):
+        return isinstance(rhs, Enum) and self.categories == rhs.categories
+
+    def __repr__(self) -> str:
+        return f"Enum[{', '.join(repr(c) for c in self.categories)}]"
+
+    def __hash__(self):
+        return hash(tuple(self.categories))
+
+    def to_polars(self):
+        import polars as pl
+
+        return pl.Enum(self.categories)
+
+    def to_sql(self):
+        import sqlalchemy as sqa
+
+        return sqa.String()
+
+    def to_arrow(self):
+        import pyarrow as pa
+
+        # There is also pa.dictionary(), which seems to be kind of similar to an enum.
+        # Maybe it is better to convert to this.
+        return pa.string()
