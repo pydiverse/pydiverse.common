@@ -15,8 +15,11 @@ from pydiverse.common import (
     Date,
     Datetime,
     Dtype,
+    Enum,
+    Float,
     Float32,
     Float64,
+    Int,
     Int8,
     Int16,
     Int32,
@@ -92,7 +95,7 @@ def test_dtype_to_pyarrow():
     assert_conversion(Datetime(), pa.timestamp("us"))
 
 
-@pytest.mark.skipif(pa is None, reason="requires pandas, numpy, and pyarrow")
+@pytest.mark.skipif(pa is None, reason="requires pyarrow")
 @pytest.mark.parametrize(
     "type_",
     ALL_TYPES,
@@ -100,8 +103,18 @@ def test_dtype_to_pyarrow():
 def test_all_types(type_):
     if type_ is pdc.List:
         type_obj = type_(pdc.Int64())
+    elif type_ is pdc.Enum:
+        type_obj = type_("a", "b", "c")
     else:
         type_obj = type_()
+
+    acceptance_map = {
+        Enum: String(),
+        Float: Float64(),
+        Int: Int64(),
+    }
+
     dst_type = type_obj.to_arrow()
     back_type = Dtype.from_arrow(dst_type)
-    assert isinstance(back_type, type_)
+
+    assert back_type == acceptance_map.get(type_, type_obj)

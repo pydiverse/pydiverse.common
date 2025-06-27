@@ -9,8 +9,10 @@ from pydiverse.common import (
     Date,
     Datetime,
     Dtype,
+    Float,
     Float32,
     Float64,
+    Int,
     Int8,
     Int16,
     Int32,
@@ -95,6 +97,12 @@ def test_all_types(type_):
         type_obj = type_(pdc.Int64())
     else:
         type_obj = type_()
+
+    acceptance_map = {
+        Float: Float64(),
+        Int: Int64(),
+    }
+
     dst_type = type_obj.to_polars()
     back_type = Dtype.from_polars(dst_type)
-    assert isinstance(back_type, type_)
+    assert back_type == acceptance_map.get(type_, type_obj)

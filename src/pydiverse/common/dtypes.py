@@ -141,6 +141,9 @@ class Dtype:
         # we don't know any decimal/time/null dtypes in pandas if column is not
         # arrow backed
 
+        if pandas_type.name == "category":
+            return Enum(*pandas_type.categories.to_list())
+
         raise TypeError
 
     @staticmethod
@@ -294,6 +297,9 @@ class Dtype:
         if isinstance(self, List):
             raise TypeError("pandas doesn't have a native list dtype")
 
+        if isinstance(self, Enum):
+            return pd.CategoricalDtype(self.categories)
+
         return {
             Int(): pd.Int64Dtype(),  # we default to 64 bit
             Int8(): pd.Int8Dtype(),
@@ -319,6 +325,9 @@ class Dtype:
     def to_arrow(self):
         """Convert this Dtype to a PyArrow type."""
         import pyarrow as pa
+
+        if isinstance(self, Enum):
+            return pa.string()
 
         return {
             Int(): pa.int64(),  # we default to 64 bit
@@ -468,6 +477,8 @@ class List(Dtype):
 
 class Enum(String):
     def __init__(self, *categories: str):
+        if not all(isinstance(c, str) for c in categories):
+            raise TypeError("arguments for `Enum` must have type `str`")
         self.categories = list(categories)
 
     def __eq__(self, rhs):
