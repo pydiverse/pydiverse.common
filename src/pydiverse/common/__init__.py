@@ -7,6 +7,7 @@ from .dtypes import (
     Decimal,
     Dtype,
     Duration,
+    Enum,
     Float,
     Float32,
     Float64,
@@ -51,5 +52,6 @@ __all__ = [
     "UInt32",
     "UInt64",
     "List",
+    "Enum",
     "PandasBackend",
 ]
