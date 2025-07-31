@@ -764,7 +764,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/soupsieve-2.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-8.2.3-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autobuild-2024.10.3-pyhd8ed1ab_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2023.4.0-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2025.3.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-basic-ng-1.0.0b2-pyhd8ed1ab_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-click-6.0.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-copybutton-0.5.2-pyhd8ed1ab_1.conda
@@ -860,7 +860,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/soupsieve-2.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-8.2.3-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autobuild-2024.10.3-pyhd8ed1ab_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2023.4.0-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2025.3.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-basic-ng-1.0.0b2-pyhd8ed1ab_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-click-6.0.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-copybutton-0.5.2-pyhd8ed1ab_1.conda
@@ -950,7 +950,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/soupsieve-2.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-8.2.3-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autobuild-2024.10.3-pyhd8ed1ab_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2023.4.0-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2025.3.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-basic-ng-1.0.0b2-pyhd8ed1ab_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-click-6.0.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-copybutton-0.5.2-pyhd8ed1ab_1.conda
@@ -1040,7 +1040,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/soupsieve-2.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-8.2.3-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autobuild-2024.10.3-pyhd8ed1ab_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2023.4.0-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2025.3.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-basic-ng-1.0.0b2-pyhd8ed1ab_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-click-6.0.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-copybutton-0.5.2-pyhd8ed1ab_1.conda
@@ -1127,7 +1127,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/soupsieve-2.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-8.2.3-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autobuild-2024.10.3-pyhd8ed1ab_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2023.4.0-pyhd8ed1ab_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2025.3.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-basic-ng-1.0.0b2-pyhd8ed1ab_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-click-6.0.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-copybutton-0.5.2-pyhd8ed1ab_1.conda
@@ -14304,8 +14304,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.10.* *_cp310
-  arch: x86_64
-  platform: linux
   license: Python-2.0
   size: 25042108
   timestamp: 1749049293621
@@ -14332,8 +14330,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.11.* *_cp311
-  arch: x86_64
-  platform: linux
   license: Python-2.0
   size: 30629559
   timestamp: 1749050021812
@@ -14386,8 +14382,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
-  arch: x86_64
-  platform: linux
   license: Python-2.0
   size: 31445023
   timestamp: 1749050216615
@@ -14413,8 +14407,6 @@ packages:
   - readline >=8.2,<9.0a0
   - tk >=8.6.13,<8.7.0a0
   - tzdata
-  arch: x86_64
-  platform: linux
   license: Python-2.0
   size: 33268245
   timestamp: 1744665022734
@@ -14441,8 +14433,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.10.* *_cp310
-  arch: aarch64
-  platform: linux
   license: Python-2.0
   size: 13039547
   timestamp: 1749048139656
@@ -14468,8 +14458,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.11.* *_cp311
-  arch: aarch64
-  platform: linux
   license: Python-2.0
   size: 15306062
   timestamp: 1749048115706
@@ -14495,8 +14483,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
-  arch: aarch64
-  platform: linux
   license: Python-2.0
   size: 13738751
   timestamp: 1749047852768
@@ -14521,8 +14507,6 @@ packages:
   - readline >=8.2,<9.0a0
   - tk >=8.6.13,<8.7.0a0
   - tzdata
-  arch: aarch64
-  platform: linux
   license: Python-2.0
   size: 33727843
   timestamp: 1744663385273
@@ -14545,8 +14529,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.10.* *_cp310
-  arch: x86_64
-  platform: osx
   license: Python-2.0
   size: 12921103
   timestamp: 1749048830353
@@ -14568,8 +14550,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.11.* *_cp311
-  arch: x86_64
-  platform: osx
   license: Python-2.0
   size: 15423460
   timestamp: 1749049420299
@@ -14612,8 +14592,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
-  arch: x86_64
-  platform: osx
   license: Python-2.0
   size: 13571569
   timestamp: 1749049058713
@@ -14636,8 +14614,6 @@ packages:
   - readline >=8.2,<9.0a0
   - tk >=8.6.13,<8.7.0a0
   - tzdata
-  arch: x86_64
-  platform: osx
   license: Python-2.0
   size: 13875464
   timestamp: 1744664784298
@@ -14660,8 +14636,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.10.* *_cp310
-  arch: arm64
-  platform: osx
   license: Python-2.0
   size: 12385306
   timestamp: 1749048585934
@@ -14683,8 +14657,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.11.* *_cp311
-  arch: arm64
-  platform: osx
   license: Python-2.0
   size: 14573820
   timestamp: 1749048947732
@@ -14706,8 +14678,6 @@ packages:
   - tzdata
   constrains:
   - python_abi 3.12.* *_cp312
-  arch: arm64
-  platform: osx
   license: Python-2.0
   size: 13009234
   timestamp: 1749048134449
@@ -14730,8 +14700,6 @@ packages:
   - readline >=8.2,<9.0a0
   - tk >=8.6.13,<8.7.0a0
   - tzdata
-  arch: arm64
-  platform: osx
   license: Python-2.0
   size: 12136505
   timestamp: 1744663807953
@@ -14754,8 +14722,6 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - python_abi 3.10.* *_cp310
-  arch: x86_64
-  platform: win
   license: Python-2.0
   size: 15832933
   timestamp: 1749048670944
@@ -14777,8 +14743,6 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - python_abi 3.11.* *_cp311
-  arch: x86_64
-  platform: win
   license: Python-2.0
   size: 18242669
   timestamp: 1749048351218
@@ -14800,8 +14764,6 @@ packages:
   - vc14_runtime >=14.29.30139
   constrains:
   - python_abi 3.12.* *_cp312
-  arch: x86_64
-  platform: win
   license: Python-2.0
   size: 15829289
   timestamp: 1749047682640
@@ -14824,8 +14786,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: Python-2.0
   size: 16614435
   timestamp: 1744663103022
@@ -14841,8 +14801,6 @@ packages:
   - python_abi 3.10.* *_cp310
   - ruamel.yaml
   - toml
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 752684
@@ -14858,8 +14816,6 @@ packages:
   - python_abi 3.11.* *_cp311
   - ruamel.yaml
   - toml
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 774302
@@ -14875,8 +14831,6 @@ packages:
   - python_abi 3.12.* *_cp312
   - ruamel.yaml
   - toml
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 768872
@@ -14892,8 +14846,6 @@ packages:
   - python_abi 3.13.* *_cp313
   - ruamel.yaml
   - toml
-  arch: x86_64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 766775
@@ -14909,8 +14861,6 @@ packages:
   - python_abi 3.10.* *_cp310
   - ruamel.yaml
   - toml
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 715030
@@ -14926,8 +14876,6 @@ packages:
   - python_abi 3.11.* *_cp311
   - ruamel.yaml
   - toml
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 734401
@@ -14943,8 +14891,6 @@ packages:
   - python_abi 3.12.* *_cp312
   - ruamel.yaml
   - toml
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 726035
@@ -14960,8 +14906,6 @@ packages:
   - python_abi 3.13.* *_cp313
   - ruamel.yaml
   - toml
-  arch: aarch64
-  platform: linux
   license: MIT
   license_family: MIT
   size: 724285
@@ -14976,8 +14920,6 @@ packages:
   - python_abi 3.10.* *_cp310
   - ruamel.yaml
   - toml
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 686709
@@ -14992,8 +14934,6 @@ packages:
   - python_abi 3.11.* *_cp311
   - ruamel.yaml
   - toml
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 698995
@@ -15008,8 +14948,6 @@ packages:
   - python_abi 3.12.* *_cp312
   - ruamel.yaml
   - toml
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 685217
@@ -15024,8 +14962,6 @@ packages:
   - python_abi 3.13.* *_cp313
   - ruamel.yaml
   - toml
-  arch: x86_64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 687987
@@ -15041,8 +14977,6 @@ packages:
   - python_abi 3.10.* *_cp310
   - ruamel.yaml
   - toml
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 683806
@@ -15058,8 +14992,6 @@ packages:
   - python_abi 3.11.* *_cp311
   - ruamel.yaml
   - toml
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 691227
@@ -15075,8 +15007,6 @@ packages:
   - python_abi 3.12.* *_cp312
   - ruamel.yaml
   - toml
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 681412
@@ -15092,8 +15022,6 @@ packages:
   - python_abi 3.13.* *_cp313
   - ruamel.yaml
   - toml
-  arch: arm64
-  platform: osx
   license: MIT
   license_family: MIT
   size: 684872
@@ -15110,8 +15038,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 607423
@@ -15128,8 +15054,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 628594
@@ -15146,8 +15070,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 607016
@@ -15164,8 +15086,6 @@ packages:
   - ucrt >=10.0.20348.0
   - vc >=14.2,<15
   - vc14_runtime >=14.29.30139
-  arch: x86_64
-  platform: win
   license: MIT
   license_family: MIT
   size: 604818
@@ -16704,17 +16624,17 @@ packages:
   license_family: MIT
   size: 17305
   timestamp: 1736585842606
-- conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2023.4.0-pyhd8ed1ab_1.conda
-  sha256: b4dc24cf0e77499234f1abeb2dbd4e0d40ab9445f3bb12286d3f84a0552b9b41
-  md5: 34d8c6841cc14d8d77cdf1b36f9f3ebe
+- conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-autosummary-accessors-2025.3.1-pyhd8ed1ab_0.conda
+  sha256: 1523894e3dab4033ad1b6bf2df88768d7ce3d77ed20f1fda5a47f59b35df3413
+  md5: 358a080adb56f8a671ff3edeb54dcb6f
   depends:
   - importlib-metadata
   - python >=3.9
   - sphinx >=3.3
   license: MIT
   license_family: MIT
-  size: 12271
-  timestamp: 1735603543238
+  size: 12593
+  timestamp: 1741707272686
 - conda: https://conda.anaconda.org/conda-forge/noarch/sphinx-basic-ng-1.0.0b2-pyhd8ed1ab_3.conda
   sha256: 90d900d31afe0bd6f42cf1e529e23e6eac4284b48bc64e5e942f19f5bf8ef0f2
   md5: a090580065b21d9c56662ebe68f6e7a6
