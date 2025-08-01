@@ -103,7 +103,10 @@ class Dtype:
                 type_, pd.core.dtypes.common.classes(np_dtype)
             )
 
-        if pd.api.types.is_signed_integer_dtype(pandas_type):
+        workaround = (
+            pandas_type is not np.floating
+        )  # see https://github.com/pandas-dev/pandas/issues/62018
+        if workaround and pd.api.types.is_signed_integer_dtype(pandas_type):
             if is_np_dtype(pandas_type, np.int64):
                 return Int64()
             elif is_np_dtype(pandas_type, np.int32):
@@ -113,7 +116,7 @@ class Dtype:
             elif is_np_dtype(pandas_type, np.int8):
                 return Int8()
             raise TypeError
-        if pd.api.types.is_unsigned_integer_dtype(pandas_type):
+        if workaround and pd.api.types.is_unsigned_integer_dtype(pandas_type):
             if is_np_dtype(pandas_type, np.uint64):
                 return UInt64()
             elif is_np_dtype(pandas_type, np.uint32):
@@ -123,8 +126,8 @@ class Dtype:
             elif is_np_dtype(pandas_type, np.uint8):
                 return UInt8()
             raise TypeError
-        if pd.api.types.is_float_dtype(pandas_type):
-            if is_np_dtype(pandas_type, np.float64):
+        if not workaround or pd.api.types.is_float_dtype(pandas_type):
+            if not workaround or is_np_dtype(pandas_type, np.float64):
                 return Float64()
             elif is_np_dtype(pandas_type, np.float32):
                 return Float32()
