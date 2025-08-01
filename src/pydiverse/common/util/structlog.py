@@ -80,7 +80,7 @@ class PydiverseConsoleRenderer(structlog.dev.ConsoleRenderer):
 
 def setup_logging(
     log_level=logging.INFO,
-    log_stream=sys.stderr,
+    log_stream=None,
     timestamp_format="%Y-%m-%d %H:%M:%S.%f",
 ):
     """Configures structlog and logging with sane defaults."""
@@ -92,6 +92,15 @@ def setup_logging(
             level=log_level,
             handlers=[StructlogHandler()],
         )
+        if log_stream is None:
+            try:
+                # hack to avoid dask pickling problems with pytest capture
+                import structlog._output
+
+                structlog._output.stderr = sys.stderr
+            finally:
+                pass
+            log_stream = sys.stderr
         # Configure structlog
         structlog.configure(
             processors=[
