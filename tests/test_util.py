@@ -1,12 +1,20 @@
 # Copyright (c) QuantCo and pydiverse contributors 2025-2025
 # SPDX-License-Identifier: BSD-3-Clause
 import traceback
+import types
 from dataclasses import dataclass
 
 import pytest
 
 from pydiverse.common.errors import DisposedError
 from pydiverse.common.util import Disposable, deep_map, requires
+from pydiverse.common.util.hashing import hash_polars_dataframe
+
+try:
+    import polars as pl
+except ImportError:
+    pl = types.ModuleType("polars")
+    pl.DataFrame = None
 
 
 def test_requires():
@@ -112,3 +120,68 @@ def test_deep_map():
     res = deep_map([1, d.values()], lambda x: 2 if x == 1 else x)
     assert res[0] == 2
     assert list(res[1]) == list(d.values())
+
+
+def check_df_hashes(df1_a: pl.DataFrame, other_dfs: list[pl.DataFrame]) -> None:
+    assert hash_polars_dataframe(df1_a)[0] == "0"
+    assert hash_polars_dataframe(df1_a, use_init_repr=True)[0] == "1"
+    assert hash_polars_dataframe(df1_a) == hash_polars_dataframe(df1_a)
+    assert hash_polars_dataframe(df1_a, use_init_repr=True) == hash_polars_dataframe(
+        df1_a, use_init_repr=True
+    )
+    for df1_other in other_dfs:
+        assert hash_polars_dataframe(df1_other)[0] == "0"
+        assert hash_polars_dataframe(df1_other, use_init_repr=True)[0] == "1"
+        assert hash_polars_dataframe(df1_a) != hash_polars_dataframe(df1_other)
+        assert hash_polars_dataframe(
+            df1_a, use_init_repr=True
+        ) != hash_polars_dataframe(df1_other, use_init_repr=True)
+        assert hash_polars_dataframe(df1_other) == hash_polars_dataframe(df1_other)
+        assert hash_polars_dataframe(
+            df1_other, use_init_repr=True
+        ) == hash_polars_dataframe(df1_other, use_init_repr=True)
+
+
+@pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
+def test_hashing():
+    df1_a = pl.DataFrame(
+        data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
+    ).with_columns(s=pl.struct("x", "y"))
+    df1_b = pl.DataFrame(
+        data=dict(x=[["foo", "bar"], [""]], z=[[1, 2], None], y=[1, 2])
+    ).with_columns(s=pl.struct("x", "y"))
+    df1_c = pl.DataFrame(
+        data=dict(x=[["foo", "baR"], [""]], y=[[1, 2], None], z=[1, 2])
+    ).with_columns(s=pl.struct("x", "y"))
+    df1_d = pl.DataFrame(
+        data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], None], z=[1, 2])
+    ).with_columns(s=pl.struct("x", "y"))
+    df1_e = pl.DataFrame(
+        data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], []], z=[1, 2])
+    ).with_columns(s=pl.struct("x", "y"))
+    df1_f = pl.DataFrame(
+        data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
+    ).with_columns(s=pl.struct("x", "z"))
+
+    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e, df1_f])
+
+
+@pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
+def test_hashing_array():
+    df1_a = pl.DataFrame(
+        data=dict(x=[[[1], [2], [3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1)))
+    )
+    df1_b = pl.DataFrame(
+        data=dict(y=[[[1], [2], [3]]]), schema=dict(y=pl.Array(pl.UInt16, shape=(3, 1)))
+    )
+    df1_c = pl.DataFrame(
+        data=dict(x=[[[1], [3], [2]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1)))
+    )
+    df1_d = pl.DataFrame(
+        data=dict(x=[[[1, 2, 3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(1, 3)))
+    )
+    df1_e = pl.DataFrame(
+        data=dict(x=[[1, 2, 3]]), schema=dict(x=pl.Array(pl.UInt16, shape=3))
+    )
+
+    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e])

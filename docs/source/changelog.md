@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.6 (2025-08-19)
+- support util.hashing.hash_polars_dataframe
+
 ## 0.3.5 (2025-08-01)
 - hack structlog / dask / pytest capture incompatibility
 (structlog._output.stderr != sys.stderr leads to pickle error)
