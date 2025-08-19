@@ -7,7 +7,7 @@ import pytest
 
 from pydiverse.common.errors import DisposedError
 from pydiverse.common.util import Disposable, deep_map, requires
-from src.pydiverse.common.util.hashing import hash_polars_dataframe
+from pydiverse.common.util.hashing import hash_polars_dataframe
 
 try:
     import polars as pl
