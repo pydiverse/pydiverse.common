@@ -31,7 +31,7 @@ def stable_hash(*args: str) -> str:
     hash_str = base64.b32encode(hash_digest).decode("ascii").lower()
     return hash_str[:20]
 
-def hash_polars_dataframe(df: pl.DataFrame) -> str:
+ef hash_polars_dataframe(df: pl.DataFrame) -> str:
     def unnest_all(df: pl.DataFrame) -> pl.DataFrame:
         while struct_columns_and_dtypes := [
             (col, dtype) for col, dtype in df.schema.items() if dtype == pl.Struct
@@ -41,7 +41,9 @@ def hash_polars_dataframe(df: pl.DataFrame) -> str:
                     [stable_hash(struct_col_name, struct_field_name)]
                 )
                 for struct_col_name, struct_field_name in struct_columns_and_dtypes
-            ).unnest(struct_col_name for struct_col_name, _ in struct_columns_and_dtypes)
+            ).unnest(
+                struct_col_name for struct_col_name, _ in struct_columns_and_dtypes
+            )
         return df
 
     schema_hash = stable_hash(repr(df.schema))
@@ -73,3 +75,4 @@ def hash_polars_dataframe(df: pl.DataFrame) -> str:
             .item()
         )
     return stable_hash(schema_hash, content_hash)
+
