@@ -1,6 +1,7 @@
 # Copyright (c) QuantCo and pydiverse contributors 2025-2025
 # SPDX-License-Identifier: BSD-3-Clause
 import traceback
+import types
 from dataclasses import dataclass
 
 import pytest
@@ -12,7 +13,8 @@ from pydiverse.common.util.hashing import hash_polars_dataframe
 try:
     import polars as pl
 except ImportError:
-    pl = None
+    pl = types.ModuleType("polars")
+    pl.DataFrame = None
 
 
 def test_requires():
