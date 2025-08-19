@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.8 (2025-08-19)
+- fixed util.hashing.hash_polars_dataframe for simple dataframe
+
 ## 0.3.7 (2025-08-19)
 - support util.hashing.hash_polars_dataframe
 
