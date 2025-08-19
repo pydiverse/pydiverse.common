@@ -73,24 +73,27 @@ def hash_polars_dataframe(df: pl.DataFrame, use_init_repr=False) -> str:
                 list_columns = [
                     col for col, dtype in df.schema.items() if dtype == pl.List
                 ]
-                content_hash = str(
-                    df.lazy()
-                    .with_columns(pl.col(array_columns).reshape([-1]).implode())
-                    .with_columns(
-                        # Necessary because hash() does not work on lists of strings.
-                        # This can be removed when
-                        # https://github.com/pola-rs/polars/issues/21523 is resolved
-                        # in all supported versions of polars.
-                        pl.selectors.by_dtype(pl.List(pl.String)).list.eval(
-                            pl.element().hash()
-                        )
+                lf = df.lazy()
+                if array_columns:
+                    lf = lf.with_columns(pl.col(array_columns).reshape([-1]).implode())
+                lf = lf.with_columns(
+                    # Necessary because hash() does not work on lists of strings.
+                    # This can be removed when
+                    # https://github.com/pola-rs/polars/issues/21523 is resolved
+                    # in all supported versions of polars.
+                    pl.selectors.by_dtype(pl.List(pl.String)).list.eval(
+                        pl.element().hash()
                     )
+                )
+                if list_columns or array_columns:
                     # Necessary because hash_rows() does not work on lists.
                     # This can be removed when
                     # https://github.com/pola-rs/polars/issues/24121 is resolved
                     # in all supported versions of polars.
-                    .with_columns(pl.col(*list_columns, *array_columns).hash())
-                    .collect()
+                    lf = lf.with_columns(pl.col(*list_columns, *array_columns).hash())
+
+                content_hash = str(
+                    lf.collect()
                     .hash_rows()  # We get a Series of hashes, one for each row
                     # Since polars only hashes rows, we need to implode the Series into
                     # a single row to get a single hash
@@ -99,7 +102,7 @@ def hash_polars_dataframe(df: pl.DataFrame, use_init_repr=False) -> str:
                     .item()
                 )
             return "0" + stable_hash(schema_hash, content_hash)
-        except Exception:
+        except Exception as e:
             warnings.warn(
                 "Failed to compute hash for polars DataFrame in fast way. "
                 "Falling back to to_init_repr() method.",
