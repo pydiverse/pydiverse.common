@@ -1,11 +1,14 @@
 # Changelog
 
-## 0.3.6 (2025-08-19)
+## 0.3.7 (2025-08-19)
 - support util.hashing.hash_polars_dataframe
 
-## 0.3.5 (2025-08-01)
+## 0.3.6 (2025-08-01)
 - hack structlog / dask / pytest capture incompatibility
 (structlog._output.stderr != sys.stderr leads to pickle error)
+
+## 0.3.5 (2025-06-27)
+- added enum type
 
 ## 0.3.4 (2025-06-10)
 - fixed pypi package dependencies
