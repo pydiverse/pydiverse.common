@@ -143,6 +143,17 @@ def check_df_hashes(df1_a: pl.DataFrame, other_dfs: list[pl.DataFrame]) -> None:
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
+def test_hashing_basic():
+    df1_a = pl.DataFrame(dict(x=[1]))
+    df1_b = pl.DataFrame(dict(y=[1]))
+    df1_c = pl.DataFrame(dict(x=[2]))
+    df1_d = pl.DataFrame(dict(x=[1.0]))
+    df1_e = pl.DataFrame(dict(x=[]))
+
+    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e])
+
+
+@pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
 def test_hashing():
     df1_a = pl.DataFrame(
         data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
@@ -162,9 +173,8 @@ def test_hashing():
     df1_f = pl.DataFrame(
         data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
     ).with_columns(s=pl.struct("x", "z"))
-    df2 = pl.DataFrame({"x": [1]})
 
-    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e, df1_f, df2])
+    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e, df1_f])
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")

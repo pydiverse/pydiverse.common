@@ -102,7 +102,7 @@ def hash_polars_dataframe(df: pl.DataFrame, use_init_repr=False) -> str:
                     .item()
                 )
             return "0" + stable_hash(schema_hash, content_hash)
-        except Exception as e:
+        except Exception:
             warnings.warn(
                 "Failed to compute hash for polars DataFrame in fast way. "
                 "Falling back to to_init_repr() method.",
