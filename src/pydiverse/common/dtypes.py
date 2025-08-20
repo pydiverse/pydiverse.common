@@ -201,6 +201,11 @@ class Dtype:
             return NullType()
         if pa.types.is_list(arrow_type):
             return List(Dtype.from_arrow(arrow_type.value_type))
+        if pa.types.is_dictionary(arrow_type):
+            raise RuntimeError(
+                "Most likely this is an Enum type. But metadata about categories is "
+                "only in the pyarrow field and not in the pyarrow dtype"
+            )
         raise TypeError
 
     @staticmethod
@@ -268,7 +273,7 @@ class Dtype:
         if backend == PandasBackend.NUMPY:
             return self.to_pandas_nullable(backend)
         if backend == PandasBackend.ARROW:
-            if self == String():
+            if self == String() or isinstance(self, Enum):
                 return pd.StringDtype(storage="pyarrow")
             return pd.ArrowDtype(self.to_arrow())
 
@@ -354,6 +359,12 @@ class Dtype:
             Duration(): pa.duration("us"),
             NullType(): pa.null(),
         }[self]
+
+    def to_arrow_field(self, name: str, nullable: bool = True):
+        """Convert this Dtype to a PyArrow Field."""
+        import pyarrow as pa
+
+        return pa.field(name, self.to_arrow(), nullable=nullable)
 
     def to_polars(self: "Dtype"):
         """Convert this Dtype to a Polars type."""
@@ -506,6 +517,19 @@ class Enum(String):
     def to_arrow(self):
         import pyarrow as pa
 
-        # There is also pa.dictionary(), which seems to be kind of similar to an enum.
-        # Maybe it is better to convert to this.
+        # enum categories can only be maintained in pyarrow field (see to_arrow_field)
         return pa.string()
+
+    def to_arrow_field(self, name: str, nullable: bool = True):
+        """Convert this Dtype to a PyArrow Field."""
+        import pyarrow as pa
+
+        # try to mimic what polars does
+        return pa.field(
+            name,
+            pa.dictionary(pa.uint32(), pa.large_string()),
+            nullable=nullable,
+            metadata={
+                "_PL_ENUM_VALUES": "".join([f"{len(c)};{c}" for c in self.categories])
+            },
+        )
