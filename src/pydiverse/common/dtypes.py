@@ -355,6 +355,12 @@ class Dtype:
             NullType(): pa.null(),
         }[self]
 
+    def to_arrow_field(self, name: str, nullable: bool = True):
+        """Convert this Dtype to a PyArrow Field."""
+        import pyarrow as pa
+
+        return pa.field(name, self.to_arrow(), nullable=nullable)
+
     def to_polars(self: "Dtype"):
         """Convert this Dtype to a Polars type."""
         import polars as pl
@@ -506,6 +512,19 @@ class Enum(String):
     def to_arrow(self):
         import pyarrow as pa
 
-        # There is also pa.dictionary(), which seems to be kind of similar to an enum.
-        # Maybe it is better to convert to this.
-        return pa.string()
+        # try to mimic what polars does
+        return pa.dictionary(pa.uint32(), pa.large_string())
+
+    def to_arrow_field(self, name: str, nullable: bool = True):
+        """Convert this Dtype to a PyArrow Field."""
+        import pyarrow as pa
+
+        # try to mimic what polars does
+        return pa.field(
+            name,
+            self.to_arrow(),
+            nullable=nullable,
+            metadata={
+                "_PL_ENUM_VALUES": "".join([f"{len(c)};{c}" for c in self.categories])
+            },
+        )

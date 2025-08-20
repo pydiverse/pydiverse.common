@@ -96,6 +96,20 @@ def test_dtype_to_pyarrow():
 
 
 @pytest.mark.skipif(pa is None, reason="requires pyarrow")
+def test_dtype_to_pyarrow_enum():
+    import polars as pl
+
+    def assert_conversion(type_: Dtype, expected_dtype):
+        df = pl.DataFrame(dict(x=["a"]), schema=dict(x=expected_dtype))
+        expected = df.to_arrow().schema
+        actual = pa.schema([type_.to_arrow_field("x", nullable=True)])
+        assert actual == expected
+        assert actual.field(0).metadata == expected.field(0).metadata
+
+    assert_conversion(Enum("a", "b;c"), pl.Enum(["a", "b;c"]))
+
+
+@pytest.mark.skipif(pa is None, reason="requires pyarrow")
 @pytest.mark.parametrize(
     "type_",
     ALL_TYPES,

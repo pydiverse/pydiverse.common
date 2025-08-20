@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.9 (2025-08-21)
+- fix enum pyarrow dtype
+
 ## 0.3.8 (2025-08-19)
 - fixed util.hashing.hash_polars_dataframe for simple dataframe
 
