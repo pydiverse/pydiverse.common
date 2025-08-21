@@ -52,6 +52,7 @@ def test_dtype_from_sqlalchemy():
     assert_conversion(sa.Float(53), Float64())
 
     assert_conversion(sa.String(), String())
+    assert_conversion(sa.String(10), String(10))
     assert_conversion(sa.Boolean(), Bool())
 
     assert_conversion(sa.Date(), Date())
@@ -77,7 +78,23 @@ def test_dtype_to_sqlalchemy():
     assert_conversion(Float64(), sa.Float)
     assert_conversion(Float32(), sa.Float)
 
+    assert_conversion(Decimal(), sa.Numeric)
+    assert_conversion(Decimal(15), sa.Numeric)
+    assert_conversion(Decimal(15, 2), sa.Numeric)
+    assert Decimal().to_sql().precision == 31
+    assert Decimal().to_sql().scale == 11
+    assert Decimal(15).to_sql().precision == 15
+    assert Decimal(15).to_sql().scale == 6
+    assert Decimal(7, 2).to_sql().precision == 7
+    assert Decimal(7, 2).to_sql().scale == 2
+
     assert_conversion(String(), sa.String)
+    assert_conversion(String(10), sa.String)
+    assert_conversion(Enum("a", "bbb", "cc"), sa.String)
+    assert String().to_sql().length is None
+    assert String(10).to_sql().length == 10
+    assert Enum("a", "bbb", "cc").to_sql().length == 3
+
     assert_conversion(Bool(), sa.Boolean)
 
     assert_conversion(Date(), sa.Date)

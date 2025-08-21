@@ -49,20 +49,20 @@ class Dtype:
     @staticmethod
     def from_sql(sql_type) -> "Dtype":
         """Convert a SQL type to a Dtype."""
-        import sqlalchemy as sqa
+        import sqlalchemy as sa
 
-        if isinstance(sql_type, sqa.SmallInteger):
+        if isinstance(sql_type, sa.SmallInteger):
             return Int16()
-        if isinstance(sql_type, sqa.BigInteger):
+        if isinstance(sql_type, sa.BigInteger):
             return Int64()
-        if isinstance(sql_type, sqa.Integer):
+        if isinstance(sql_type, sa.Integer):
             return Int32()
-        if isinstance(sql_type, sqa.Float):
+        if isinstance(sql_type, sa.Float):
             precision = sql_type.precision or 53
             if precision <= 24:
                 return Float32()
             return Float64()
-        if isinstance(sql_type, sqa.Numeric | sqa.DECIMAL):
+        if isinstance(sql_type, sa.Numeric | sa.DECIMAL):
             # Just to be safe, we always use FLOAT64 for fixpoint numbers.
             # Databases are obsessed about fixpoint. However, in dataframes, it
             # is more common to just work with double precision floating point.
@@ -70,21 +70,21 @@ class Dtype:
             # Decimal to Float64 whenever it cannot guarantee semantic correctness
             # otherwise.
             return Float64()
-        if isinstance(sql_type, sqa.String):
+        if isinstance(sql_type, sa.String):
             return String()
-        if isinstance(sql_type, sqa.Boolean):
+        if isinstance(sql_type, sa.Boolean):
             return Bool()
-        if isinstance(sql_type, sqa.Date):
+        if isinstance(sql_type, sa.Date):
             return Date()
-        if isinstance(sql_type, sqa.Time):
+        if isinstance(sql_type, sa.Time):
             return Time()
-        if isinstance(sql_type, sqa.DateTime):
+        if isinstance(sql_type, sa.DateTime):
             return Datetime()
-        if isinstance(sql_type, sqa.Interval):
+        if isinstance(sql_type, sa.Interval):
             return Duration()
-        if isinstance(sql_type, sqa.ARRAY):
+        if isinstance(sql_type, sa.ARRAY):
             return List(Dtype.from_sql(sql_type.item_type))
-        if isinstance(sql_type, sqa.types.NullType):
+        if isinstance(sql_type, sa.types.NullType):
             return NullType()
 
         raise TypeError
@@ -184,7 +184,7 @@ class Dtype:
             raise TypeError
         if pa.types.is_decimal(arrow_type):
             # We don't recommend using Decimal in dataframes, but we support it.
-            return Decimal()
+            return Decimal(arrow_type.precision, arrow_type.scale)
         if pa.types.is_string(arrow_type):
             return String()
         if pa.types.is_boolean(arrow_type):
@@ -217,6 +217,8 @@ class Dtype:
             return List(Dtype.from_polars(polars_type.inner))
         if isinstance(polars_type, pl.Enum):
             return Enum(*polars_type.categories)
+        if isinstance(polars_type, pl.Decimal):
+            return Decimal(polars_type.precision, polars_type.scale)
 
         return {
             pl.Int64: Int64(),
@@ -229,7 +231,6 @@ class Dtype:
             pl.UInt8: UInt8(),
             pl.Float64: Float64(),
             pl.Float32: Float32(),
-            pl.Decimal: Decimal(),
             pl.Utf8: String(),
             pl.Boolean: Bool(),
             pl.Datetime: Datetime(),
@@ -241,29 +242,28 @@ class Dtype:
 
     def to_sql(self):
         """Convert this Dtype to a SQL type."""
-        import sqlalchemy as sqa
+        import sqlalchemy as sa
 
         return {
-            Int(): sqa.BigInteger(),  # we default to 64 bit
-            Int8(): sqa.SmallInteger(),
-            Int16(): sqa.SmallInteger(),
-            Int32(): sqa.Integer(),
-            Int64(): sqa.BigInteger(),
-            UInt8(): sqa.SmallInteger(),
-            UInt16(): sqa.Integer(),
-            UInt32(): sqa.BigInteger(),
-            UInt64(): sqa.BigInteger(),
-            Float(): sqa.Float(53),  # we default to 64 bit
-            Float32(): sqa.Float(24),
-            Float64(): sqa.Float(53),
-            Decimal(): sqa.DECIMAL(),
-            String(): sqa.String(),
-            Bool(): sqa.Boolean(),
-            Date(): sqa.Date(),
-            Time(): sqa.Time(),
-            Datetime(): sqa.DateTime(),
-            Duration(): sqa.Interval(),
-            NullType(): sqa.types.NullType(),
+            Int(): sa.BigInteger(),  # we default to 64 bit
+            Int8(): sa.SmallInteger(),
+            Int16(): sa.SmallInteger(),
+            Int32(): sa.Integer(),
+            Int64(): sa.BigInteger(),
+            UInt8(): sa.SmallInteger(),
+            UInt16(): sa.Integer(),
+            UInt32(): sa.BigInteger(),
+            UInt64(): sa.BigInteger(),
+            Float(): sa.Float(53),  # we default to 64 bit
+            Float32(): sa.Float(24),
+            Float64(): sa.Float(53),
+            String(): sa.String(),
+            Bool(): sa.Boolean(),
+            Date(): sa.Date(),
+            Time(): sa.Time(),
+            Datetime(): sa.DateTime(),
+            Duration(): sa.Interval(),
+            NullType(): sa.types.NullType(),
         }[self]
 
     def to_pandas(self, backend: PandasBackend = PandasBackend.ARROW):
@@ -273,7 +273,7 @@ class Dtype:
         if backend == PandasBackend.NUMPY:
             return self.to_pandas_nullable(backend)
         if backend == PandasBackend.ARROW:
-            if self == String() or isinstance(self, Enum):
+            if isinstance(self, String) or isinstance(self, Enum):
                 return pd.StringDtype(storage="pyarrow")
             return pd.ArrowDtype(self.to_arrow())
 
@@ -321,7 +321,7 @@ class Dtype:
             Float(): pd.Float64Dtype(),  # we default to 64 bit
             Float32(): pd.Float32Dtype(),
             Float64(): pd.Float64Dtype(),
-            Decimal(): pd.Float64Dtype(),  # NumericDtype is
+            Decimal(): pd.Float64Dtype(),  # NumericDtype exists but is not used
             String(): pd.StringDtype(),
             Bool(): pd.BooleanDtype(),
             Date(): "datetime64[s]",
@@ -333,9 +333,6 @@ class Dtype:
     def to_arrow(self):
         """Convert this Dtype to a PyArrow type."""
         import pyarrow as pa
-
-        if isinstance(self, Enum):
-            return pa.string()
 
         return {
             Int(): pa.int64(),  # we default to 64 bit
@@ -350,7 +347,6 @@ class Dtype:
             Float(): pa.float64(),  # we default to 64 bit
             Float32(): pa.float32(),
             Float64(): pa.float64(),
-            Decimal(): pa.decimal128(35, 10),  # Arbitrary precision
             String(): pa.string(),
             Bool(): pa.bool_(),
             Date(): pa.date32(),
@@ -383,8 +379,6 @@ class Dtype:
             Float(): pl.Float64,  # we default to 64 bit
             Float64(): pl.Float64,
             Float32(): pl.Float32,
-            Decimal(): pl.Decimal(scale=10),  # Arbitrary precision
-            String(): pl.Utf8,
             Bool(): pl.Boolean,
             Datetime(): pl.Datetime("us"),
             Duration(): pl.Duration("us"),
@@ -406,7 +400,43 @@ class Float64(Float): ...
 class Float32(Float): ...
 
 
-class Decimal(Float): ...
+class Decimal(Float):
+    def __init__(self, precision: int | None = None, scale: int | None = None):
+        """
+        Initialize a Decimal Dtype.
+
+        Default is Decimal(31,10) which is the highest precision that works with DB2.
+        If you like to save memory, Decimal(15,6) will get you quite far as well.
+
+        :param precision: total number of digits in the number
+            If not specified, it is assumed to be 31.
+        :param scale: number of digits after the decimal point
+            If not specified, it is assumed to be (precision//3+1).
+        """
+        self.precision = precision or 31
+        self.scale = scale or (self.precision // 3 + 1)
+
+    def to_sql(self):
+        import sqlalchemy as sa
+
+        return sa.Numeric(self.precision, self.scale)
+
+    def to_polars(self):
+        import polars as pl
+
+        return pl.Decimal(self.precision, self.scale)
+
+    def to_arrow(self):
+        import pyarrow as pa
+
+        if self.precision > 38:
+            return pa.decimal256(self.precision, self.scale)
+        elif self.precision > 18:
+            return pa.decimal128(self.precision, self.scale)
+        elif self.precision > 9:
+            return pa.decimal64(self.precision, self.scale)
+        else:
+            return pa.decimal32(self.precision, self.scale)
 
 
 class Int(Dtype):
@@ -439,7 +469,32 @@ class UInt16(Int): ...
 class UInt8(Int): ...
 
 
-class String(Dtype): ...
+class String(Dtype):
+    def __init__(self, max_length: int | None = None):
+        """
+        Initialize a String Dtype.
+
+        :param max_length: maximum length of string
+            This length will only be used for specifying fixed length strings in SQL.
+            Thus, the meaning of characters vs. bytes is dependent on the SQL dialect.
+        """
+        self.max_length = max_length
+
+    def to_sql(self):
+        """Convert this Dtype to a SQL type."""
+        import sqlalchemy as sa
+
+        return sa.String(length=self.max_length)
+
+    def to_polars(self):
+        import polars as pl
+
+        return pl.Utf8
+
+    def to_arrow(self):
+        import pyarrow as pa
+
+        return pa.string()
 
 
 class Bool(Dtype): ...
@@ -474,9 +529,9 @@ class List(Dtype):
         return f"List[{repr(self.inner)}]"
 
     def to_sql(self):
-        import sqlalchemy as sqa
+        import sqlalchemy as sa
 
-        return sqa.ARRAY(self.inner.to_sql())
+        return sa.ARRAY(self.inner.to_sql())
 
     def to_polars(self):
         import polars as pl
@@ -494,6 +549,7 @@ class Enum(String):
         if not all(isinstance(c, str) for c in categories):
             raise TypeError("arguments for `Enum` must have type `str`")
         self.categories = list(categories)
+        self.max_length = max([len(c) for c in categories])
 
     def __eq__(self, rhs):
         return isinstance(rhs, Enum) and self.categories == rhs.categories
@@ -508,11 +564,6 @@ class Enum(String):
         import polars as pl
 
         return pl.Enum(self.categories)
-
-    def to_sql(self):
-        import sqlalchemy as sqa
-
-        return sqa.String()
 
     def to_arrow(self):
         import pyarrow as pa

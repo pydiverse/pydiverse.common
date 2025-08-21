@@ -8,6 +8,7 @@ from pydiverse.common import (
     Bool,
     Date,
     Datetime,
+    Decimal,
     Dtype,
     Float,
     Float32,
@@ -79,7 +80,12 @@ def test_dtype_to_polars():
     assert_conversion(Float64(), pl.Float64)
     assert_conversion(Float32(), pl.Float32)
 
+    assert_conversion(Decimal(), pl.Decimal(31, 11))
+    assert_conversion(Decimal(15), pl.Decimal(15, 6))
+    assert_conversion(Decimal(15, 2), pl.Decimal(15, 2))
+
     assert_conversion(String(), pl.Utf8)
+    assert_conversion(String(10), pl.Utf8)
     assert_conversion(Bool(), pl.Boolean)
 
     assert_conversion(Date(), pl.Date)
