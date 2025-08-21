@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.11 (2025-08-21)
+- fixed __eq__, __hash__, and __repr__ for types with parameters
+- import string length from sqlalchemy VARCHAR(n) type
+
 ## 0.3.10 (2025-08-21)
 - implemented String with max_length argument for SQL VARCHAR(n) generation
 - implemented Decimal with precision and scale arguments

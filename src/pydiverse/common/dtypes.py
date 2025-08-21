@@ -23,6 +23,10 @@ class Dtype:
         """Return a string representation of this dtype."""
         return self.__class__.__name__
 
+    def __str__(self):
+        """Return a string representation of this dtype."""
+        return self.__repr__()
+
     @classmethod
     def is_int(cls):
         """Return ``True`` if this dtype is an integer type."""
@@ -71,7 +75,7 @@ class Dtype:
             # otherwise.
             return Float64()
         if isinstance(sql_type, sa.String):
-            return String()
+            return String(sql_type.length)
         if isinstance(sql_type, sa.Boolean):
             return Bool()
         if isinstance(sql_type, sa.Date):
@@ -416,6 +420,20 @@ class Decimal(Float):
         self.precision = precision or 31
         self.scale = scale or (self.precision // 3 + 1)
 
+    def __eq__(self, rhs):
+        return (
+            isinstance(rhs, self.__class__)
+            and self.precision == rhs.precision
+            and self.scale == rhs.scale
+        )
+
+    def __hash__(self):
+        return hash((self.__class__.__name__, self.precision, self.scale))
+
+    def __repr__(self):
+        """Return a string representation of this dtype."""
+        return f"{self.__class__.__name__}({self.precision}, {self.scale})"
+
     def to_sql(self):
         import sqlalchemy as sa
 
@@ -480,6 +498,16 @@ class String(Dtype):
         """
         self.max_length = max_length
 
+    def __eq__(self, rhs):
+        return isinstance(rhs, self.__class__) and self.max_length == rhs.max_length
+
+    def __hash__(self):
+        return hash((self.__class__.__name__, self.max_length))
+
+    def __repr__(self):
+        """Return a string representation of this dtype."""
+        return f"{self.__class__.__name__}({self.max_length})"
+
     def to_sql(self):
         """Convert this Dtype to a SQL type."""
         import sqlalchemy as sa
@@ -523,10 +551,11 @@ class List(Dtype):
         return isinstance(rhs, List) and self.inner == rhs.inner
 
     def __hash__(self):
-        return hash((0, hash(self.inner)))
+        return hash((self.__class__.__name__, hash(self.inner)))
 
     def __repr__(self):
-        return f"List[{repr(self.inner)}]"
+        """Return a string representation of this dtype."""
+        return f"{self.__class__.__name__}[{self.inner}]"
 
     def to_sql(self):
         import sqlalchemy as sa
@@ -556,11 +585,13 @@ class Enum(String):
     def __eq__(self, rhs):
         return isinstance(rhs, Enum) and self.categories == rhs.categories
 
-    def __repr__(self) -> str:
-        return f"Enum[{', '.join(repr(c) for c in self.categories)}]"
-
     def __hash__(self):
-        return hash(tuple(self.categories))
+        return hash((self.__class__.__name__, tuple(self.categories)))
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}[{', '.join(repr(c) for c in self.categories)}]"
+        )
 
     def to_polars(self):
         import polars as pl
