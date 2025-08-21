@@ -113,7 +113,15 @@ def test_dtype_to_pandas_numpy():
     assert_conversion(UInt16(), pd.UInt16Dtype())
     assert_conversion(UInt8(), pd.UInt8Dtype())
 
+    assert_conversion(Float64(), pd.Float64Dtype())
+    assert_conversion(Float32(), pd.Float32Dtype())
+
+    assert_conversion(Decimal(), pd.Float64Dtype())
+    assert_conversion(Decimal(15), pd.Float64Dtype())
+    assert_conversion(Decimal(15, 2), pd.Float64Dtype())
+
     assert_conversion(String(), pd.StringDtype())
+    assert_conversion(String(10), pd.StringDtype())
     assert_conversion(Bool(), pd.BooleanDtype())
 
     assert_conversion(Date(), "datetime64[s]")
@@ -142,7 +150,17 @@ def test_dtype_to_pandas_pyarrow():
     assert_conversion(UInt16(), pa.uint16())
     assert_conversion(UInt8(), pa.uint8())
 
+    assert_conversion(Float64(), pa.float64())
+    assert_conversion(Float32(), pa.float32())
+
+    assert_conversion(Decimal(), pa.decimal128(31, 11))
+    assert_conversion(Decimal(76), pa.decimal256(76, 76 // 3 + 1))
+    assert_conversion(Decimal(15), pa.decimal64(15, 6))
+    assert_conversion(Decimal(18, 2), pa.decimal64(18, 2))
+    assert_conversion(Decimal(9, 9), pa.decimal32(9, 9))
+
     assert_conversion(String(), pd.StringDtype(storage="pyarrow"))
+    assert_conversion(String(10), pd.StringDtype(storage="pyarrow"))
     assert_conversion(Bool(), pa.bool_())
 
     assert_conversion(Date(), pa.date32())
