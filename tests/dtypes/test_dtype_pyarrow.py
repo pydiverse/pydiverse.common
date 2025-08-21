@@ -14,6 +14,7 @@ from pydiverse.common import (
     Bool,
     Date,
     Datetime,
+    Decimal,
     Dtype,
     Enum,
     Float,
@@ -87,7 +88,14 @@ def test_dtype_to_pyarrow():
     assert_conversion(Float64(), pa.float64())
     assert_conversion(Float32(), pa.float32())
 
+    assert_conversion(Decimal(), pa.decimal128(31, 11))
+    assert_conversion(Decimal(76), pa.decimal256(76, 76 // 3 + 1))
+    assert_conversion(Decimal(15), pa.decimal64(15, 6))
+    assert_conversion(Decimal(18, 2), pa.decimal64(18, 2))
+    assert_conversion(Decimal(9, 9), pa.decimal32(9, 9))
+
     assert_conversion(String(), pa.string())
+    assert_conversion(String(10), pa.string())
     assert_conversion(Bool(), pa.bool_())
 
     assert_conversion(Date(), pa.date32())
@@ -99,9 +107,29 @@ def test_dtype_to_pyarrow():
 def test_dtype_to_pyarrow_enum():
     import polars as pl
 
+    def fix_field_index_type(field):
+        if pa.types.is_dictionary(field.type):
+            # somehow the index type can jump around in polars and fixing it to uint32
+            # seems reasonable
+            return (
+                pa.field(
+                    field.name,
+                    pa.dictionary(
+                        pa.uint32(), field.type.value_type, field.type.ordered
+                    ),
+                )
+                .with_nullable(field.nullable)
+                .with_metadata(field.metadata)
+            )
+        else:
+            return field
+
+    def fix_index_type(schema):
+        return pa.schema([fix_field_index_type(field) for field in schema])
+
     def assert_conversion(type_: Dtype, expected_dtype):
         df = pl.DataFrame(dict(x=["a"]), schema=dict(x=expected_dtype))
-        expected = df.to_arrow().schema
+        expected = fix_index_type(df.to_arrow().schema)
         actual = pa.schema([type_.to_arrow_field("x", nullable=True)])
         assert actual == expected
         assert actual.field(0).metadata == expected.field(0).metadata

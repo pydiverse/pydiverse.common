@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.10 (2025-08-21)
+- implemented String with max_length argument for SQL VARCHAR(n) generation
+- implemented Decimal with precision and scale arguments
+
 ## 0.3.9 (2025-08-21)
 - fix enum pyarrow dtype
 
