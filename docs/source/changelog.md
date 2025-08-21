@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.12 (2025-08-21)
+- fixed Dtype.to_pandas() for parameterized String and Decimal types
+
 ## 0.3.11 (2025-08-21)
 - fixed __eq__, __hash__, and __repr__ for types with parameters
 - import string length from sqlalchemy VARCHAR(n) type

@@ -311,6 +311,15 @@ class Dtype:
 
         if isinstance(self, Enum):
             return pd.CategoricalDtype(self.categories)
+        if isinstance(self, String):
+            return pd.StringDtype()  # max_length not needed for dataframes
+        if isinstance(self, Decimal):
+            # NumericDtype exists but is not used because fixpoint is more common
+            # in SQL than in dataframes.
+            return pd.Float64Dtype()
+        if isinstance(self, List):
+            # we don't want to produce object columns
+            raise TypeError("pandas doesn't have a native list dtype")
 
         return {
             Int(): pd.Int64Dtype(),  # we default to 64 bit
@@ -325,8 +334,6 @@ class Dtype:
             Float(): pd.Float64Dtype(),  # we default to 64 bit
             Float32(): pd.Float32Dtype(),
             Float64(): pd.Float64Dtype(),
-            Decimal(): pd.Float64Dtype(),  # NumericDtype exists but is not used
-            String(): pd.StringDtype(),
             Bool(): pd.BooleanDtype(),
             Date(): "datetime64[s]",
             Datetime(): "datetime64[us]",
