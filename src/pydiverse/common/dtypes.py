@@ -549,7 +549,9 @@ class Enum(String):
         if not all(isinstance(c, str) for c in categories):
             raise TypeError("arguments for `Enum` must have type `str`")
         self.categories = list(categories)
-        self.max_length = max([len(c) for c in categories])
+        self.max_length = (
+            max([len(c) for c in categories]) if len(categories) > 0 else None
+        )
 
     def __eq__(self, rhs):
         return isinstance(rhs, Enum) and self.categories == rhs.categories

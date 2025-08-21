@@ -101,6 +101,8 @@ def test_dtype_to_polars():
 def test_all_types(type_):
     if type_ is pdc.List:
         type_obj = type_(pdc.Int64())
+    elif type_ is pdc.Enum:
+        type_obj = type_("a", "bbb", "cc")
     else:
         type_obj = type_()
 
