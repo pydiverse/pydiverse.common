@@ -111,7 +111,7 @@ def test_all_types(type_):
     if type_ is pdc.List:
         type_obj = type_(pdc.Int64())
     elif type_ is pdc.Enum:
-        type_obj = type_("a", "b", "c")
+        type_obj = type_("a", "bbb", "cc")
     else:
         type_obj = type_()
     dst_type = type_obj.to_sql()
@@ -129,6 +129,6 @@ def test_all_types(type_):
         Float: Float64(),
         Int: Int64(),
         # there is no Enum
-        Enum: String(),
+        Enum: String(3),
     }
     assert back_type == acceptance_map.get(type_, type_obj)
