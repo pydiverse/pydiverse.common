@@ -52,11 +52,14 @@ def hash_polars_dataframe(df: pl.DataFrame, use_init_repr=False) -> str:
                 ]:
                     df = df.with_columns(
                         pl.col(struct_col_name).struct.rename_fields(
-                            [stable_hash(struct_col_name, struct_field_name)]
+                            [stable_hash(struct_col_name, struct_dtype)]
                         )
-                        for struct_col_name, struct_field_name in struct_cols_and_dtypes
+                        for struct_col_name, struct_dtype in struct_cols_and_dtypes
                     ).unnest(
-                        struct_col_name for struct_col_name, _ in struct_cols_and_dtypes
+                        [
+                            struct_col_name
+                            for struct_col_name, _ in struct_cols_and_dtypes
+                        ]
                     )
                 return df
 

@@ -583,6 +583,7 @@ class Enum(String):
             pa.dictionary(pa.uint32(), pa.large_string()),
             nullable=nullable,
             metadata={
-                "_PL_ENUM_VALUES": "".join([f"{len(c)};{c}" for c in self.categories])
+                # the key might change with polars versions
+                "_PL_ENUM_VALUES2": "".join([f"{len(c)};{c}" for c in self.categories])
             },
         )
