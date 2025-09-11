@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.14 (2025-XX-XX)
+- fix hashing of struct columns in Polars DataFrames
+
 ## 0.3.13 (2025-09-11)
 - added py.typed to package so mypy recognizes it as typed package
 
