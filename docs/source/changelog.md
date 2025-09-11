@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.13 (2025-09-11)
+- added py.typed to package so mypy recognizes it as typed package
+
 ## 0.3.12 (2025-08-21)
 - fixed Dtype.to_pandas() for parameterized String and Decimal types
 
