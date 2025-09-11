@@ -173,8 +173,11 @@ def test_hashing():
     df1_f = pl.DataFrame(
         data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
     ).with_columns(s=pl.struct("x", "z"))
+    df1_g = pl.DataFrame(
+        data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
+    ).with_columns(s=pl.struct("x", pl.col("y") * 2))
 
-    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e, df1_f])
+    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e, df1_f, df1_g])
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
