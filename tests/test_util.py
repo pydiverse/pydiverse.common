@@ -122,24 +122,32 @@ def test_deep_map():
     assert list(res[1]) == list(d.values())
 
 
-def check_df_hashes(df1_a: pl.DataFrame, other_dfs: list[pl.DataFrame]) -> None:
-    assert hash_polars_dataframe(df1_a)[0] == "0"
-    assert hash_polars_dataframe(df1_a, use_init_repr=True)[0] == "1"
-    assert hash_polars_dataframe(df1_a) == hash_polars_dataframe(df1_a)
-    assert hash_polars_dataframe(df1_a, use_init_repr=True) == hash_polars_dataframe(
-        df1_a, use_init_repr=True
+def check_df_hashes(*dfs: pl.DataFrame) -> None:
+    init_repr_hashes = []
+    hashes = []
+    for df in dfs:
+        init_repr_hashes.append(hash_polars_dataframe(df))
+        hashes.append(hash_polars_dataframe(df, use_init_repr=True))
+        assert hash_polars_dataframe(df)[0] == "0"
+        assert hash_polars_dataframe(df, use_init_repr=True)[0] == "1"
+        assert hash_polars_dataframe(df) == hash_polars_dataframe(df)
+        assert hash_polars_dataframe(df, use_init_repr=True) == hash_polars_dataframe(
+            df, use_init_repr=True
+        )
+
+    # Assert that the hashes are unique
+    assert len(hashes) == len(set(hashes)), (
+        pl.DataFrame(dict(hash=hashes))
+        .with_row_index()
+        .group_by("hash")
+        .agg(pl.col("index"))
     )
-    for df1_other in other_dfs:
-        assert hash_polars_dataframe(df1_other)[0] == "0"
-        assert hash_polars_dataframe(df1_other, use_init_repr=True)[0] == "1"
-        assert hash_polars_dataframe(df1_a) != hash_polars_dataframe(df1_other)
-        assert hash_polars_dataframe(
-            df1_a, use_init_repr=True
-        ) != hash_polars_dataframe(df1_other, use_init_repr=True)
-        assert hash_polars_dataframe(df1_other) == hash_polars_dataframe(df1_other)
-        assert hash_polars_dataframe(
-            df1_other, use_init_repr=True
-        ) == hash_polars_dataframe(df1_other, use_init_repr=True)
+    assert len(init_repr_hashes) == len(set(init_repr_hashes)), (
+        pl.DataFrame(dict(hash=hashes))
+        .with_row_index()
+        .group_by("hash")
+        .agg(pl.col("index"))
+    )
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
@@ -150,7 +158,7 @@ def test_hashing_basic():
     df1_d = pl.DataFrame(dict(x=[1.0]))
     df1_e = pl.DataFrame(dict(x=[]))
 
-    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e])
+    check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e)
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
@@ -177,7 +185,7 @@ def test_hashing():
         data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
     ).with_columns(s=pl.struct("x", pl.col("y") * 2))
 
-    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e, df1_f, df1_g])
+    check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e, df1_f, df1_g)
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
@@ -198,4 +206,4 @@ def test_hashing_array():
         data=dict(x=[[1, 2, 3]]), schema=dict(x=pl.Array(pl.UInt16, shape=3))
     )
 
-    check_df_hashes(df1_a, [df1_b, df1_c, df1_d, df1_e])
+    check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e)
