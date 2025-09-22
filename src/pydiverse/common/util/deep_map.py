@@ -41,7 +41,9 @@ def deep_map(x, fn: Callable, memo=None):
             }
         )
     else:
-        y = fn(x)
+        y = x
+
+    y = fn(y)
 
     # If is its own copy, don't memoize.
     if y is not x:

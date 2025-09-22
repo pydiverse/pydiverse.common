@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.15 (2025-09-22)
+- fix that deep_map also maps top level @dataclass
+
 ## 0.3.14 (2025-09-12)
 - fix hashing of struct columns in Polars DataFrames
 
