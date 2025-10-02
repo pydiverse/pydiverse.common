@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 (2025-10-02)
+- switch structlog.setup_logging() to stdlib LoggingFactory
+(this allows dynamic adjustment of log level: `with log_level(logging.DEBUG):`)
+
 ## 0.3.15 (2025-09-22)
 - fix that deep_map also maps top level @dataclass
 
