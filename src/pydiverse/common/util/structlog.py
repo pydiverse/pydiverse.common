@@ -4,10 +4,14 @@ import logging
 import sys
 import textwrap
 import types
+from collections.abc import Generator
+from contextlib import contextmanager
 from io import StringIO
 
 try:
     import structlog
+    from structlog import configure, get_config
+    from structlog.testing import LogCapture
     from structlog.typing import EventDict, WrappedLogger
 
     structlog_installed = True
@@ -85,40 +89,102 @@ def setup_logging(
 ):
     """Configures structlog and logging with sane defaults."""
 
-    if structlog_installed:
-        # Redirect all logs submitted to logging to structlog
-        logging.basicConfig(
-            format="%(message)s",
-            level=log_level,
-            handlers=[StructlogHandler()],
-        )
-        if log_stream is None:
-            try:
-                # hack to avoid dask pickling problems with pytest capture
-                import structlog._output
+    if log_stream is None:
+        log_stream = sys.stderr
 
-                structlog._output.stderr = sys.stderr
-            finally:
-                pass
-            log_stream = sys.stderr
-        # Configure structlog
+    # Stdlib: decide where logs go here (handlers), not in structlog’s LoggerFactory
+    logging.basicConfig(
+        level=log_level,
+        handlers=[logging.StreamHandler(log_stream)],
+        format="%(message)s",
+    )
+
+    if structlog_installed:
+        # --- Final renderer used for BOTH stdlib and structlog events ---
+        renderer = PydiverseConsoleRenderer(render_keys=["query", "table_obj", "task", "table", "detail"])
+
+        # --- ProcessorFormatter wires stdlib logging -> structlog processors ---
+        formatter = structlog.stdlib.ProcessorFormatter(
+            # This is the final step for BOTH paths (stdlib & structlog):
+            processor=renderer,
+            # Processors applied to *foreign* (stdlib logging) records before 'processor'
+            foreign_pre_chain=[
+                structlog.contextvars.merge_contextvars,
+                structlog.processors.StackInfoRenderer(),
+                structlog.dev.set_exc_info,
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.filter_by_level,  # consult stdlib level
+                structlog.processors.TimeStamper(timestamp_format),
+            ],
+        )
+
+        # --- Stdlib handler (pytest caplog will capture this) ---
+        handler = logging.StreamHandler(log_stream)
+        handler.setFormatter(formatter)
+
+        # It’s often safer to set handlers explicitly than to rely on basicConfig()’s global state
+        root = logging.getLogger()
+        root.handlers[:] = [handler]
+        root.setLevel(log_level)
+
+        # --- structlog side: end with wrap_for_formatter so ProcessorFormatter runs the renderer ---
         structlog.configure(
             processors=[
                 structlog.contextvars.merge_contextvars,
                 structlog.processors.StackInfoRenderer(),
                 structlog.dev.set_exc_info,
-                structlog.processors.add_log_level,
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.filter_by_level,  # consult stdlib level
                 structlog.processors.TimeStamper(timestamp_format),
-                PydiverseConsoleRenderer(
-                    render_keys=["query", "table_obj", "task", "table", "detail"]
-                ),
+                # Hand off to logging's ProcessorFormatter (which will call `renderer`)
+                structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
             ],
-            wrapper_class=structlog.make_filtering_bound_logger(log_level),
-            logger_factory=structlog.PrintLoggerFactory(log_stream),
+            logger_factory=structlog.stdlib.LoggerFactory(),
+            wrapper_class=structlog.stdlib.BoundLogger,
             cache_logger_on_first_use=True,
         )
-    else:
-        logging.basicConfig(
-            format="%(message)s",
-            level=log_level,
-        )
+
+
+@contextmanager
+def log_level(level: int, logger_name: str | None = None):
+    lg = logging.getLogger(logger_name)  # None => root
+    old = lg.level
+    try:
+        lg.setLevel(level)
+        yield
+    finally:
+        lg.setLevel(old)
+
+
+@contextmanager
+def capture_logs() -> Generator[list[EventDict], None, None]:
+    """
+    Context manager that appends all logging statements to its yielded list
+    while it is active. Disables all configured processors for the duration
+    of the context manager.
+
+    Attention: this is **not** thread-safe!
+
+    <This is derived from structlog.testing.capture_logs which is MIT licensed>
+    """
+    assert structlog_installed, "please install structlog to capture logs with this function"
+
+    cap = LogCapture()
+    # Modify `_Configuration.default_processors` set via `configure` but always
+    # keep the list instance intact to not break references held by bound
+    # loggers.
+    processors = get_config()["processors"]
+    old_processors = processors.copy()
+    try:
+        # clear processors list and use LogCapture for testing
+        processors.clear()
+        processors.append(structlog.stdlib.add_log_level)
+        processors.append(structlog.stdlib.filter_by_level)
+        processors.append(cap)
+        configure(processors=processors)
+        yield cap.entries
+    finally:
+        # remove LogCapture and restore original processors
+        processors.clear()
+        processors.extend(old_processors)
+        configure(processors=processors)
