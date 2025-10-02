@@ -24,6 +24,8 @@ except ImportError:
 
     structlog.dev = dev
     structlog_installed = False
+    configure, get_config = None, None
+    LogCapture = None
     EventDict, WrappedLogger = None, None
 
 

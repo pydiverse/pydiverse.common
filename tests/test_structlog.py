@@ -3,11 +3,17 @@
 
 import logging
 
-import structlog
+import pytest
 
 from pydiverse.common.util.structlog import capture_logs, log_level
 
+try:
+    import structlog
+except ImportError:
+    structlog = None
 
+
+@pytest.mark.skipif(structlog is None, reason="requires structlog")
 def test_structlog():
     logger = structlog.get_logger(__name__ + ".test_structlog")
     logger.info("start test")
@@ -23,6 +29,7 @@ def test_structlog():
     ]
 
 
+@pytest.mark.skipif(structlog is None, reason="requires structlog")
 def test_structlog_level01():
     logger = structlog.get_logger(__name__ + ".test_structlog_level01")
     with capture_logs() as logs:
@@ -40,6 +47,7 @@ def test_structlog_level01():
     ]
 
 
+@pytest.mark.skipif(structlog is None, reason="requires structlog")
 def test_structlog_level02():
     logger = structlog.get_logger(__name__ + ".test_structlog_level02")
     with capture_logs() as logs:
