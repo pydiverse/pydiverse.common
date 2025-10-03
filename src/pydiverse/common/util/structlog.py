@@ -29,23 +29,6 @@ except ImportError:
     EventDict, WrappedLogger = None, None
 
 
-class StructlogHandler(logging.Handler):
-    """
-    Stdlib logging handler that feeds all events back into structlog
-
-    Can't be used with a structlog logger_factory that uses the logging library,
-    otherwise logging would result in an infinite loop.
-    """
-
-    def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
-        self._log = structlog.get_logger()
-
-    def emit(self, record):
-        msg = self.format(record)
-        self._log.log(record.levelno, msg, logger=record.name)
-
-
 class PydiverseConsoleRenderer(structlog.dev.ConsoleRenderer):
     """
     Custom subclass of the structlog ConsoleRenderer that allows rendering
