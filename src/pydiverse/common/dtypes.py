@@ -44,11 +44,7 @@ class Dtype:
         For example, ``Int8.is_subtype(Int())`` is ``True``.
         """
         rhs_cls = type(rhs)
-        return (
-            (cls is rhs_cls)
-            or (rhs_cls is Int and cls.is_int())
-            or (rhs_cls is Float and cls.is_float())
-        )
+        return (cls is rhs_cls) or (rhs_cls is Int and cls.is_int()) or (rhs_cls is Float and cls.is_float())
 
     @staticmethod
     def from_sql(sql_type) -> "Dtype":
@@ -103,13 +99,9 @@ class Dtype:
             return Dtype.from_arrow(pandas_type.pyarrow_dtype)
 
         def is_np_dtype(type_, np_dtype):
-            return pd.core.dtypes.common._is_dtype_type(
-                type_, pd.core.dtypes.common.classes(np_dtype)
-            )
+            return pd.core.dtypes.common._is_dtype_type(type_, pd.core.dtypes.common.classes(np_dtype))
 
-        workaround = (
-            pandas_type is not np.floating
-        )  # see https://github.com/pandas-dev/pandas/issues/62018
+        workaround = pandas_type is not np.floating  # see https://github.com/pandas-dev/pandas/issues/62018
         if workaround and pd.api.types.is_signed_integer_dtype(pandas_type):
             if is_np_dtype(pandas_type, np.int64):
                 return Int64()
@@ -428,11 +420,7 @@ class Decimal(Float):
         self.scale = scale or (self.precision // 3 + 1)
 
     def __eq__(self, rhs):
-        return (
-            isinstance(rhs, self.__class__)
-            and self.precision == rhs.precision
-            and self.scale == rhs.scale
-        )
+        return isinstance(rhs, self.__class__) and self.precision == rhs.precision and self.scale == rhs.scale
 
     def __hash__(self):
         return hash((self.__class__.__name__, self.precision, self.scale))
@@ -585,9 +573,7 @@ class Enum(String):
         if not all(isinstance(c, str) for c in categories):
             raise TypeError("arguments for `Enum` must have type `str`")
         self.categories = list(categories)
-        self.max_length = (
-            max([len(c) for c in categories]) if len(categories) > 0 else None
-        )
+        self.max_length = max([len(c) for c in categories]) if len(categories) > 0 else None
 
     def __eq__(self, rhs):
         return isinstance(rhs, Enum) and self.categories == rhs.categories
@@ -596,9 +582,7 @@ class Enum(String):
         return hash((self.__class__.__name__, tuple(self.categories)))
 
     def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}[{', '.join(repr(c) for c in self.categories)}]"
-        )
+        return f"{self.__class__.__name__}[{', '.join(repr(c) for c in self.categories)}]"
 
     def to_polars(self):
         import polars as pl

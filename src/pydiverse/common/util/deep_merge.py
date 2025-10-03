@@ -16,10 +16,7 @@ from box import Box
 
 def deep_merge(x, y, check_enum=False):
     if type(x) != type(y) and not (isinstance(x, Mapping) and isinstance(y, Mapping)):  # noqa: E721
-        raise TypeError(
-            f"deep_merge failed due to type mismatch '{x}' (type: {type(x)}) vs. '{y}'"
-            f" (type: {type(y)})"
-        )
+        raise TypeError(f"deep_merge failed due to type mismatch '{x}' (type: {type(x)}) vs. '{y}' (type: {type(y)})")
 
     if isinstance(x, Box):
         z = Box(_deep_merge_dict(x, y), frozen_box=True)

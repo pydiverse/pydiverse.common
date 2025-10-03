@@ -57,9 +57,7 @@ class ComputationTracer:
             computation = deep_map(computation, self._computation_mapper)
             self.trace.append(computation)
         else:
-            raise RuntimeError(
-                "Can't modify ComputationTrace after exiting the context."
-            )
+            raise RuntimeError("Can't modify ComputationTrace after exiting the context.")
 
     @staticmethod
     def _computation_mapper(x):
@@ -82,9 +80,7 @@ class ComputationTracer:
         try:
             from dask.base import tokenize
         except ModuleNotFoundError:
-            raise ModuleNotFoundError(
-                "module dask is required to use computation_tracing."
-            ) from None
+            raise ModuleNotFoundError("module dask is required to use computation_tracing.") from None
 
         return tokenize(self.trace)
 
@@ -316,16 +312,12 @@ def patch_type(tracer: ComputationTracer, target: object, name: str):
         if key.startswith("__"):
             if key in dunder_to_patch:
                 try:
-                    tracer.patcher.patch_attr(
-                        val, key, tracer.proxy_type(tracer, full_name + "." + key)
-                    )
+                    tracer.patcher.patch_attr(val, key, tracer.proxy_type(tracer, full_name + "." + key))
                 except AttributeError:
                     pass
             continue
         else:
-            tracer.patcher.patch_attr(
-                val, key, tracer.proxy_type(tracer, full_name + "." + key)
-            )
+            tracer.patcher.patch_attr(val, key, tracer.proxy_type(tracer, full_name + "." + key))
 
     tracer.patcher.patch_attr(target, name, tracer.proxy_type(tracer, full_name))
 

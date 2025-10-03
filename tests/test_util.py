@@ -102,18 +102,21 @@ def test_deep_map():
             ) == outer([None, 3, 2, inner([3, 2, 4, None]), 4])
     # attention: the replacement morphs keys 1 and 2;
     # the latter value overrides but is itself changed from 1 to 2 => 2:2
-    assert deep_map(
-        {1: 3, 2: 1, 3: None, 4: [3, 1, None, 4], 5: 4}, lambda x: 2 if x == 1 else x
-    ) == {2: 2, 3: None, 4: [3, 2, None, 4], 5: 4}
-    assert deep_map(
-        dict(a=3, b=1, c=None, d=[3, 1, None, 4], e=4), lambda x: 2 if x == 1 else x
-    ) == dict(a=3, b=2, c=None, d=[3, 2, None, 4], e=4)
-    assert deep_map(
-        Foo(1, "test", [1, 3], (1, "four")), lambda x: 2 if x == 1 else x
-    ) == Foo(2, "test", [2, 3], (2, "four"))
-    assert deep_map(
-        [Foo(1, "test", [1, 3], (1, "four"))], lambda x: 2 if x == 1 else x
-    ) == [Foo(2, "test", [2, 3], (2, "four"))]
+    assert deep_map({1: 3, 2: 1, 3: None, 4: [3, 1, None, 4], 5: 4}, lambda x: 2 if x == 1 else x) == {
+        2: 2,
+        3: None,
+        4: [3, 2, None, 4],
+        5: 4,
+    }
+    assert deep_map(dict(a=3, b=1, c=None, d=[3, 1, None, 4], e=4), lambda x: 2 if x == 1 else x) == dict(
+        a=3, b=2, c=None, d=[3, 2, None, 4], e=4
+    )
+    assert deep_map(Foo(1, "test", [1, 3], (1, "four")), lambda x: 2 if x == 1 else x) == Foo(
+        2, "test", [2, 3], (2, "four")
+    )
+    assert deep_map([Foo(1, "test", [1, 3], (1, "four"))], lambda x: 2 if x == 1 else x) == [
+        Foo(2, "test", [2, 3], (2, "four"))
+    ]
 
     # Currently, deep_map cannot traverse other Iterables than lists, tuples, and dicts.
     d = {1: 1}
@@ -131,22 +134,14 @@ def check_df_hashes(*dfs: pl.DataFrame) -> None:
         assert hash_polars_dataframe(df)[0] == "0"
         assert hash_polars_dataframe(df, use_init_repr=True)[0] == "1"
         assert hash_polars_dataframe(df) == hash_polars_dataframe(df)
-        assert hash_polars_dataframe(df, use_init_repr=True) == hash_polars_dataframe(
-            df, use_init_repr=True
-        )
+        assert hash_polars_dataframe(df, use_init_repr=True) == hash_polars_dataframe(df, use_init_repr=True)
 
     # Assert that the hashes are unique
     assert len(hashes) == len(set(hashes)), (
-        pl.DataFrame(dict(hash=hashes))
-        .with_row_index()
-        .group_by("hash")
-        .agg(pl.col("index"))
+        pl.DataFrame(dict(hash=hashes)).with_row_index().group_by("hash").agg(pl.col("index"))
     )
     assert len(init_repr_hashes) == len(set(init_repr_hashes)), (
-        pl.DataFrame(dict(hash=hashes))
-        .with_row_index()
-        .group_by("hash")
-        .agg(pl.col("index"))
+        pl.DataFrame(dict(hash=hashes)).with_row_index().group_by("hash").agg(pl.col("index"))
     )
 
 
@@ -163,47 +158,37 @@ def test_hashing_basic():
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
 def test_hashing():
-    df1_a = pl.DataFrame(
-        data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
-    ).with_columns(s=pl.struct("x", "y"))
-    df1_b = pl.DataFrame(
-        data=dict(x=[["foo", "bar"], [""]], z=[[1, 2], None], y=[1, 2])
-    ).with_columns(s=pl.struct("x", "y"))
-    df1_c = pl.DataFrame(
-        data=dict(x=[["foo", "baR"], [""]], y=[[1, 2], None], z=[1, 2])
-    ).with_columns(s=pl.struct("x", "y"))
-    df1_d = pl.DataFrame(
-        data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], None], z=[1, 2])
-    ).with_columns(s=pl.struct("x", "y"))
-    df1_e = pl.DataFrame(
-        data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], []], z=[1, 2])
-    ).with_columns(s=pl.struct("x", "y"))
-    df1_f = pl.DataFrame(
-        data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
-    ).with_columns(s=pl.struct("x", "z"))
-    df1_g = pl.DataFrame(
-        data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])
-    ).with_columns(s=pl.struct("x", pl.col("y") * 2))
+    df1_a = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
+        s=pl.struct("x", "y")
+    )
+    df1_b = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], z=[[1, 2], None], y=[1, 2])).with_columns(
+        s=pl.struct("x", "y")
+    )
+    df1_c = pl.DataFrame(data=dict(x=[["foo", "baR"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
+        s=pl.struct("x", "y")
+    )
+    df1_d = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], None], z=[1, 2])).with_columns(
+        s=pl.struct("x", "y")
+    )
+    df1_e = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], []], z=[1, 2])).with_columns(
+        s=pl.struct("x", "y")
+    )
+    df1_f = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
+        s=pl.struct("x", "z")
+    )
+    df1_g = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
+        s=pl.struct("x", pl.col("y") * 2)
+    )
 
     check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e, df1_f, df1_g)
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
 def test_hashing_array():
-    df1_a = pl.DataFrame(
-        data=dict(x=[[[1], [2], [3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1)))
-    )
-    df1_b = pl.DataFrame(
-        data=dict(y=[[[1], [2], [3]]]), schema=dict(y=pl.Array(pl.UInt16, shape=(3, 1)))
-    )
-    df1_c = pl.DataFrame(
-        data=dict(x=[[[1], [3], [2]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1)))
-    )
-    df1_d = pl.DataFrame(
-        data=dict(x=[[[1, 2, 3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(1, 3)))
-    )
-    df1_e = pl.DataFrame(
-        data=dict(x=[[1, 2, 3]]), schema=dict(x=pl.Array(pl.UInt16, shape=3))
-    )
+    df1_a = pl.DataFrame(data=dict(x=[[[1], [2], [3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1))))
+    df1_b = pl.DataFrame(data=dict(y=[[[1], [2], [3]]]), schema=dict(y=pl.Array(pl.UInt16, shape=(3, 1))))
+    df1_c = pl.DataFrame(data=dict(x=[[[1], [3], [2]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1))))
+    df1_d = pl.DataFrame(data=dict(x=[[[1, 2, 3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(1, 3))))
+    df1_e = pl.DataFrame(data=dict(x=[[1, 2, 3]]), schema=dict(x=pl.Array(pl.UInt16, shape=3)))
 
     check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e)

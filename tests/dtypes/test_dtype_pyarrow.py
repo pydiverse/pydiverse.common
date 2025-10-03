@@ -114,9 +114,7 @@ def test_dtype_to_pyarrow_enum():
             return (
                 pa.field(
                     field.name,
-                    pa.dictionary(
-                        pa.uint32(), field.type.value_type, field.type.ordered
-                    ),
+                    pa.dictionary(pa.uint32(), field.type.value_type, field.type.ordered),
                 )
                 .with_nullable(field.nullable)
                 .with_metadata(field.metadata)

@@ -120,10 +120,7 @@ def load_object(config_dict: dict, move_keys_into_args: Collection[str] | None =
 
     args = config_dict.get("args", {}) or {}
     if not isinstance(args, dict):
-        raise TypeError(
-            f"Invalid type for args section: {type(args)}\n"
-            f"config section: {config_dict}"
-        )
+        raise TypeError(f"Invalid type for args section: {type(args)}\nconfig section: {config_dict}")
 
     if move_keys_into_args:
         args = args | {k: v for k, v in config_dict.items() if k in move_keys_into_args}
