@@ -10,4 +10,23 @@ with various execution backends like Pandas, Polars, and various SQL dialects.
 ## Usage
 
 pydiverse.common can either be installed via pypi with `pip install pydiverse-common` or via
-conda-forge with `conda install pydiverse-common -c conda-forge`.
+conda-forge with `conda install pydiverse-common -c conda-forge`. Our recommendation would be
+to use [pixi](https://pixi.sh/latest/) which is also based on conda-forge:
+
+```bash
+mkdir my_project
+pixi init
+pixi add pydiverse-common
+```
+
+With pixi, you run python like this:
+
+```bash
+pixi run python -c 'import pydiverse.common'
+```
+
+or this:
+
+```bash
+pixi run python my_script.py
+```
