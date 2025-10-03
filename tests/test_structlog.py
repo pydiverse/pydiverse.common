@@ -54,3 +54,32 @@ def test_structlog_level02():
         with log_level(logging.ERROR):
             logger.info("This is a test log message", key1="value1", key2=42)
     assert logs == []
+
+
+@pytest.mark.skipif(structlog is None, reason="requires structlog")
+def test_structlog_level03():
+    logger = structlog.get_logger(__name__ + ".test_structlog_level02")
+    with capture_logs() as logs:
+        with log_level(logging.CRITICAL):
+            logger.error("This is a test log message", key1="value1", key2=42)
+            try:
+                raise RuntimeError("this is expected")
+            except RuntimeError:
+                logger.exception("exception is expected")
+    assert logs == []
+
+
+@pytest.mark.skipif(structlog is None, reason="requires structlog")
+def test_structlog_level04():
+    logger = structlog.get_logger(__name__ + ".test_structlog_level02")
+    with capture_logs() as logs:
+        with log_level(logging.ERROR):
+            logger.error("This is a test log message", key1="value1", key2=42)
+            try:
+                raise RuntimeError("this is expected")
+            except RuntimeError:
+                logger.exception("exception is expected")
+    assert logs == [
+        {"key1": "value1", "key2": 42, "event": "This is a test log message", "level": "error", "log_level": "error"},
+        {"exc_info": True, "event": "exception is expected", "level": "error", "log_level": "error"},
+    ]
