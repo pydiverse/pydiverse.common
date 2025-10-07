@@ -98,10 +98,9 @@ def setup_logging(
                 structlog.processors.StackInfoRenderer(),
                 structlog.dev.set_exc_info,
                 structlog.stdlib.add_log_level,
-                structlog.stdlib.filter_by_level,  # consult stdlib level
+                # structlog.stdlib.filter_by_level,  # for logging, it won't have access to the actual logger
                 structlog.processors.TimeStamper(timestamp_format),
             ],
-            logger=logging.getLogger("structlog.formatter"),  # important: not None
         )
 
         # --- Stdlib handler (pytest caplog will capture this) ---

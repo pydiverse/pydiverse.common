@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.1 (2025-10-07)
+- disable filter_by_level for logging compatibility setup
+
 ## 0.4.0 (2025-10-02)
 - switch structlog.setup_logging() to stdlib LoggingFactory
 (this allows dynamic adjustment of log level: `with log_level(logging.DEBUG):`)
