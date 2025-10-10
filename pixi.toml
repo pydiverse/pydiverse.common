@@ -15,7 +15,7 @@ pip = "*"
 hatchling = "*"
 
 [dependencies]
-python = ">=3.10.18,<3.14"
+python = ">=3.10.18,<3.15"
 python-box = ">=7.3.2,<8"
 
 [feature.dev.dependencies]
@@ -81,15 +81,18 @@ python = "3.11.*"
 python = "3.12.*"
 [feature.py313.dependencies]
 python = "3.13.*"
+[feature.py314.dependencies]
+python = "3.14.*"
 
 [environments]
 default = ["py312", "dev", "optional"]
 py310 = ["py310", "dev"]
-py313 = ["py313", "dev"]
+py314 = ["py314", "dev"]
 py310all = ["py310", "dev", "optional"]
 py311all = ["py311", "dev", "optional"]
 py312all = ["py312", "dev", "optional"]
 py313all = ["py313", "dev", "optional"]
+py314all = ["py314", "dev", "optional"]
 docs = ["docs"]
 lint = { features = ["lint"], no-default-feature = true }
 release = { features = ["release"], no-default-feature = true }
