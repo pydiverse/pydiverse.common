@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.2 (2025-10-10)
+- support python 3.14
+
 ## 0.4.1 (2025-10-07)
 - disable filter_by_level for logging compatibility setup
 
