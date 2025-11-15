@@ -15,7 +15,7 @@ pip = "*"
 hatchling = "*"
 
 [dependencies]
-python = ">=3.10.18,<3.15"
+python = ">=3.10.18,<3.15.0a0"
 python-box = ">=7.3.2,<8"
 
 [feature.dev.dependencies]
