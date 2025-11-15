@@ -25,7 +25,7 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Topic :: Software Development",
 ]
-requires-python = ">=3.10,<3.15"
+requires-python = ">=3.10.18,<3.15.0a0"
 dependencies = ["python-box >=7.3.2,<8"]
 
 [tool.hatch.build.targets.wheel]
@@ -41,7 +41,7 @@ include = [
 ]
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 extend-exclude = ["docs/*"]
 fix = true
 # 88 leads to worse comments
