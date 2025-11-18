@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.3 (202Y-MM-DD)
+- drop support for python 3.10
+
 ## 0.4.2 (2025-10-10)
 - support python 3.14
 

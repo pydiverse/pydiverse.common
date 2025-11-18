@@ -33,9 +33,8 @@ jobs:
         os:
           - ubuntu-latest
         environment:
-          - py310
+          - py311
           - py314
-          - py310all
           - py311all
           - py312all
           - py313all
