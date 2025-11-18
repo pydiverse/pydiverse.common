@@ -15,7 +15,7 @@ pip = "*"
 hatchling = "*"
 
 [dependencies]
-python = ">=3.10.18,<3.15.0a0"
+python = ">=3.11.14,<3.15.0a0"
 python-box = ">=7.3.2,<8"
 
 [feature.dev.dependencies]
@@ -73,8 +73,6 @@ pre-commit-run = "pre-commit run -a"
 conda-deny = "conda-deny check"
 check-deps = "sh -c .github/scripts/check_deps.sh"
 
-[feature.py310.dependencies]
-python = "3.10.*"
 [feature.py311.dependencies]
 python = "3.11.*"
 [feature.py312.dependencies]
@@ -86,9 +84,8 @@ python = "3.14.*"
 
 [environments]
 default = ["py312", "dev", "optional"]
-py310 = ["py310", "dev"]
+py311 = ["py311", "dev"]
 py314 = ["py314", "dev"]
-py310all = ["py310", "dev", "optional"]
 py311all = ["py311", "dev", "optional"]
 py312all = ["py312", "dev", "optional"]
 py313all = ["py313", "dev", "optional"]
