@@ -8,7 +8,7 @@ import pytest
 
 from pydiverse.common.errors import DisposedError
 from pydiverse.common.util import Disposable, deep_map, requires
-from pydiverse.common.util.hashing import hash_polars_dataframe
+from pydiverse.common.util.hashing import _hash_polars_dataframe, stable_dataframe_hash
 
 try:
     import polars as pl
@@ -125,16 +125,26 @@ def test_deep_map():
     assert list(res[1]) == list(d.values())
 
 
-def check_df_hashes(*dfs: pl.DataFrame) -> None:
+def check_df_hashes(*dfs) -> None:
+    hashes = []
+    for df in dfs:
+        hashes.append(stable_dataframe_hash(df))
+    # Assert that the hashes are unique
+    assert len(hashes) == len(set(hashes)), (
+        pl.DataFrame(dict(hash=hashes)).with_row_index().group_by("hash").agg(pl.col("index"))
+    )
+
+
+def check_df_hashes_polars_specific(*dfs: pl.DataFrame) -> None:
     init_repr_hashes = []
     hashes = []
     for df in dfs:
-        init_repr_hashes.append(hash_polars_dataframe(df))
-        hashes.append(hash_polars_dataframe(df, use_init_repr=True))
-        assert hash_polars_dataframe(df)[0] == "0"
-        assert hash_polars_dataframe(df, use_init_repr=True)[0] == "1"
-        assert hash_polars_dataframe(df) == hash_polars_dataframe(df)
-        assert hash_polars_dataframe(df, use_init_repr=True) == hash_polars_dataframe(df, use_init_repr=True)
+        init_repr_hashes.append(_hash_polars_dataframe(df, use_init_repr=True))
+        hashes.append(_hash_polars_dataframe(df))
+        assert _hash_polars_dataframe(df)[0] == "0"
+        assert _hash_polars_dataframe(df, use_init_repr=True)[0] == "1"
+        assert _hash_polars_dataframe(df) == _hash_polars_dataframe(df)
+        assert _hash_polars_dataframe(df, use_init_repr=True) == _hash_polars_dataframe(df, use_init_repr=True)
 
     # Assert that the hashes are unique
     assert len(hashes) == len(set(hashes)), (
@@ -146,49 +156,103 @@ def check_df_hashes(*dfs: pl.DataFrame) -> None:
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
-def test_hashing_basic():
+@pytest.mark.parametrize("use_hash_polars_dataframe", [False, True])
+def test_hashing_basic(use_hash_polars_dataframe):
     df1_a = pl.DataFrame(dict(x=[1]))
     df1_b = pl.DataFrame(dict(y=[1]))
     df1_c = pl.DataFrame(dict(x=[2]))
     df1_d = pl.DataFrame(dict(x=[1.0]))
     df1_e = pl.DataFrame(dict(x=[]))
 
-    check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e)
+    if use_hash_polars_dataframe:
+        check_df_hashes_polars_specific(df1_a, df1_b, df1_c, df1_d, df1_e)
+    else:
+        check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e)
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
-def test_hashing():
+@pytest.mark.parametrize("use_hash_polars_dataframe", [False, True])
+def test_hashing(use_hash_polars_dataframe):
     df1_a = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
         s=pl.struct("x", "y")
     )
     df1_b = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], z=[[1, 2], None], y=[1, 2])).with_columns(
         s=pl.struct("x", "y")
     )
-    df1_c = pl.DataFrame(data=dict(x=[["foo", "baR"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
+    df1_c = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], z=[[1, 2], None], y=[1, 2])).with_columns(
+        s=pl.struct("y", "x")
+    )
+    df1_d = pl.DataFrame(data=dict(x=[["foo", "baR"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
         s=pl.struct("x", "y")
     )
-    df1_d = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], None], z=[1, 2])).with_columns(
+    df1_e = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], None], z=[1, 2])).with_columns(
         s=pl.struct("x", "y")
     )
-    df1_e = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], []], z=[1, 2])).with_columns(
+    df1_f = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 3], []], z=[1, 2])).with_columns(
         s=pl.struct("x", "y")
-    )
-    df1_f = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
-        s=pl.struct("x", "z")
     )
     df1_g = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
+        s=pl.struct("x", "z")
+    )
+    df1_h = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
         s=pl.struct("x", pl.col("y") * 2)
     )
+    df1_i = pl.DataFrame(
+        data=dict(x=[[{"a": ["foo"]}, {"b": ["bar"]}], [], [{}]], y=[[1, 2], None, []], z=[1, 2, 3])
+    ).with_columns(s=pl.struct("x", pl.col("y") * 2))
 
-    check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e, df1_f, df1_g)
+    if use_hash_polars_dataframe:
+        check_df_hashes_polars_specific(df1_a, df1_b, df1_c, df1_d, df1_e, df1_f, df1_g, df1_h, df1_i)
+    else:
+        check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e, df1_f, df1_g, df1_h, df1_i)
 
 
 @pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
-def test_hashing_array():
+@pytest.mark.parametrize("use_hash_polars_dataframe", [False, True])
+def test_hashing_array(use_hash_polars_dataframe):
     df1_a = pl.DataFrame(data=dict(x=[[[1], [2], [3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1))))
     df1_b = pl.DataFrame(data=dict(y=[[[1], [2], [3]]]), schema=dict(y=pl.Array(pl.UInt16, shape=(3, 1))))
     df1_c = pl.DataFrame(data=dict(x=[[[1], [3], [2]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1))))
     df1_d = pl.DataFrame(data=dict(x=[[[1, 2, 3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(1, 3))))
     df1_e = pl.DataFrame(data=dict(x=[[1, 2, 3]]), schema=dict(x=pl.Array(pl.UInt16, shape=3)))
 
-    check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e)
+    if use_hash_polars_dataframe:
+        check_df_hashes_polars_specific(df1_a, df1_b, df1_c, df1_d, df1_e)
+    else:
+        check_df_hashes(df1_a, df1_b, df1_c, df1_d, df1_e)
+
+
+@pytest.mark.skipif(pl.DataFrame is None, reason="requires polars")
+@pytest.mark.parametrize("use_hash_polars_dataframe", [False, True])
+def test_hash_categorical(use_hash_polars_dataframe):
+    df_a = pl.DataFrame(dict(x=["apple", "banana", "apple"]), schema=dict(x=pl.Categorical))
+    df_b = pl.DataFrame(dict(x=["apple", "banana", "apple"]), schema=dict(x=pl.String))
+    df_c = pl.DataFrame(dict(x=["c", "b", "c"]), schema=dict(x=pl.Categorical))
+    df_d = pl.DataFrame(dict(x=["apple", "banana", "apple"]), schema=dict(x=pl.Categorical))
+    df_e = pl.DataFrame(dict(x=["apple", "apple", "banana"]), schema=dict(x=pl.Categorical))
+    df_f = df_a.sort("x")
+
+    if use_hash_polars_dataframe:
+        check_df_hashes_polars_specific(df_a, df_b, df_c, df_e)
+        assert _hash_polars_dataframe(df_a) == _hash_polars_dataframe(df_d)
+        assert _hash_polars_dataframe(df_e) == _hash_polars_dataframe(df_f)
+    else:
+        check_df_hashes(df_a, df_b, df_c, df_e)
+        assert stable_dataframe_hash(df_a) == stable_dataframe_hash(df_d)
+        assert stable_dataframe_hash(df_e) == stable_dataframe_hash(df_f)
+
+
+# TODO: Test pandas hashing
+def test_hash_pandas():
+    import datetime as dt
+
+    import pandas as pd
+
+    df_1 = pd.DataFrame({"a": [1, 2, 3], "b": ["x", "y", "z"]})
+
+    df_2 = pd.DataFrame(
+        {"a": [1, 2, 3], "b": [{"a": dt.date(2020, 1, 1)}, {"b": dt.date(2021, 2, 2)}, {"a": dt.date(2022, 3, 3)}]}
+    )
+
+    df_3 = pd.DataFrame({"a": [1, 2, 3], "b": ["x", "y", 1]})
+    _ = df_1, df_2, df_3
