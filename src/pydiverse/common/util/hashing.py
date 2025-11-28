@@ -18,6 +18,7 @@ try:
 except ImportError:
     pa = types.ModuleType("pa")
     pa.DataType = None
+    pa.Table = None
     pa.Schema = None
     pat = types.ModuleType("pat")
     ipc = types.ModuleType("ipc")
