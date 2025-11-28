@@ -76,6 +76,7 @@ def _hash_polars_dataframe(df: pl.DataFrame, use_init_repr=False) -> str:
     ```
     will give different results because the internal dictionary encoding is different. Same applies
     to the Enum type replaced by Categorical.
+    See also https://github.com/pola-rs/polars/issues/14829
     """
     if not use_init_repr:
         try:
@@ -141,7 +142,7 @@ def _dictionary_free_schema(schema: pa.Schema) -> pa.Schema:
 
 
 def _as_arrow_table(obj) -> pa.Table:
-    """Accept Arrow Table, Polars DF, pandas DF and return a pa.Table."""
+    """Accept pyarrow Table, Polars DF, pandas DF and return a pa.Table."""
     if isinstance(obj, pa.Table):
         return obj
 
@@ -158,12 +159,24 @@ def _as_arrow_table(obj) -> pa.Table:
     raise TypeError(f"Unsupported input type: {type(obj)!r}")
 
 
+def _hash_schema(obj) -> str:
+    """Compute a stable hash for the schema of a pyarrow Table, Polars DataFrame, or pandas DataFrame."""
+    if isinstance(obj, pa.Table):
+        return stable_hash(repr(obj.schema))
+    if pl is not None and isinstance(obj, pl.DataFrame):
+        return stable_hash(repr(obj.schema))
+    import pandas as pd
+
+    if isinstance(obj, pd.DataFrame):
+        return stable_dataframe_hash(pa.Table.from_pandas(pd.DataFrame(obj.dtypes.astype("string[pyarrow]"))))
+    raise TypeError(f"Unsupported input type: {type(obj)!r}")
+
+
 def stable_dataframe_hash(
     df,
     *,
     strip_schema_metadata: bool = True,
     drop_field_metadata: bool = True,
-    ipc_metadata_version: ipc.MetadataVersion = ipc.MetadataVersion.V5,
 ) -> str:
     """
     Compute a stable, cross-library SHA-256 of a full table.
@@ -186,7 +199,11 @@ def stable_dataframe_hash(
         t = pa.Table.from_arrays(list(t.columns), schema=_strip_field_metadata(t.schema))
 
     # 3) Hash schema separately, since we replace dictionaries in the next step
-    schema_hash = repr(t.schema)
+    # If we don't have a pyarrow Table, we use the original df to compute the schema hash
+    # because some dtype information may be lost in the conversion to pyarrow.
+    # For example, after converting from pandas to pyarrow, we no longer know if a column
+    # was arrow or numpy backed.
+    schema_hash = _hash_schema(df) if not isinstance(df, pa.Table) else _hash_schema(t)
 
     # 4) Decode all dictionary encodings (including nested) by casting to a dict-free schema
     dict_free = _dictionary_free_schema(t.schema)
@@ -195,7 +212,7 @@ def stable_dataframe_hash(
 
     # 5) Deterministic IPC serialization (single batch, no compression, explicit metadata version)
     sink = pa.BufferOutputStream()
-    write_opts = ipc.IpcWriteOptions(metadata_version=ipc_metadata_version, compression=None)
+    write_opts = ipc.IpcWriteOptions(metadata_version=ipc.MetadataVersion.V5, compression=None)
     with ipc.RecordBatchStreamWriter(sink, t.schema, options=write_opts) as writer:
         writer.write_table(t, max_chunksize=t.num_rows)
 
