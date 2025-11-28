@@ -21,11 +21,13 @@ try:
     import pyarrow as pa
 except ImportError:
     pa = types.ModuleType("pyarrow")
+    pa.Table = None
 
 try:
     import pandas as pd
 except ImportError:
     pd = types.ModuleType("pandas")
+    pd.DataFrame = None
 
 
 def test_requires():
@@ -171,7 +173,7 @@ def check_df_hashes_polars_specific(*dfs: pl.DataFrame) -> None:
     )
 
 
-@pytest.mark.skipif(pl.DataFrame is None or pa is None, reason="requires polars and pyarrow")
+@pytest.mark.skipif(pl.DataFrame is None or pa.Table is None, reason="requires polars and pyarrow")
 @pytest.mark.parametrize("use_hash_polars_dataframe", [False, True])
 def test_hashing_basic(use_hash_polars_dataframe):
     df_a = pl.DataFrame(dict(x=[1]))
@@ -186,7 +188,7 @@ def test_hashing_basic(use_hash_polars_dataframe):
         check_df_hashes(df_a, df_b, df_c, df_d, df_e)
 
 
-@pytest.mark.skipif(pl.DataFrame is None or pa is None, reason="requires polars and pyarrow")
+@pytest.mark.skipif(pl.DataFrame is None or pa.Table is None, reason="requires polars and pyarrow")
 @pytest.mark.parametrize("use_hash_polars_dataframe", [False, True])
 def test_hashing(use_hash_polars_dataframe):
     df_a = pl.DataFrame(data=dict(x=[["foo", "bar"], [""]], y=[[1, 2], None], z=[1, 2])).with_columns(
@@ -226,7 +228,7 @@ def test_hashing(use_hash_polars_dataframe):
         check_df_hashes(df_a, df_b, df_c, df_d, df_e, df_f, df_g, df_h, df_i, df_j, df_j_mod)
 
 
-@pytest.mark.skipif(pl.DataFrame is None or pa is None, reason="requires polars and pyarrow")
+@pytest.mark.skipif(pl.DataFrame is None or pa.Table is None, reason="requires polars and pyarrow")
 @pytest.mark.parametrize("use_hash_polars_dataframe", [False, True])
 def test_hashing_array(use_hash_polars_dataframe):
     df_a = pl.DataFrame(data=dict(x=[[[1], [2], [3]]]), schema=dict(x=pl.Array(pl.UInt16, shape=(3, 1))))
@@ -241,7 +243,7 @@ def test_hashing_array(use_hash_polars_dataframe):
         check_df_hashes(df_a, df_b, df_c, df_d, df_e)
 
 
-@pytest.mark.skipif(pl.DataFrame is None or pa is None, reason="requires polars and pyarrow")
+@pytest.mark.skipif(pl.DataFrame is None or pa.Table is None, reason="requires polars and pyarrow")
 @pytest.mark.parametrize("use_hash_polars_dataframe", [False, True])
 def test_hash_categorical_enum(use_hash_polars_dataframe):
     df_a_cat = pl.DataFrame(dict(x=["apple", "banana", "apple"]), schema=dict(x=pl.Categorical))
@@ -264,7 +266,7 @@ def test_hash_categorical_enum(use_hash_polars_dataframe):
         assert stable_dataframe_hash(df_d) == stable_dataframe_hash(df_e)
 
 
-@pytest.mark.skipif(pd is None or pa is None, reason="requires pandas and pyarrow")
+@pytest.mark.skipif(pd.DataFrame is None or pa.Table is None, reason="requires pandas and pyarrow")
 def test_hash_pandas():
     import pandas as pd
 
