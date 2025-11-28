@@ -217,10 +217,13 @@ def test_hashing(use_hash_polars_dataframe):
         data=dict(x=[[{"a": ["foo"]}, {"b": ["bar"]}], [], [{}]], y=[[1, 2], None, []], z=[1, 2, 3])
     ).with_columns(s=pl.struct("x", pl.col("y") * 2))
 
+    df_j = pl.DataFrame({f"a{i}": [1, 2, 3] for i in range(10000)})
+    df_j_mod = pl.DataFrame({f"{'b' if i == 5000 else 'a'}{i}": [1, 2, 3] for i in range(10000)})
+
     if use_hash_polars_dataframe:
-        check_df_hashes_polars_specific(df_a, df_b, df_c, df_d, df_e, df_f, df_g, df_h, df_i)
+        check_df_hashes_polars_specific(df_a, df_b, df_c, df_d, df_e, df_f, df_g, df_h, df_i, df_j, df_j_mod)
     else:
-        check_df_hashes(df_a, df_b, df_c, df_d, df_e, df_f, df_g, df_h, df_i)
+        check_df_hashes(df_a, df_b, df_c, df_d, df_e, df_f, df_g, df_h, df_i, df_j, df_j_mod)
 
 
 @pytest.mark.skipif(pl.DataFrame is None or pa is None, reason="requires polars and pyarrow")
