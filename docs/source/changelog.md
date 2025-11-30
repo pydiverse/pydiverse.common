@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.3 (202Y-MM-DD)
+## 0.4.3 (2025-11-30)
 - drop support for python 3.10
 - add support for hashing pandas dataframes and arrow tables
 - use pyarrow for hashing of polars dataframes, fixing issues with categorical columns
