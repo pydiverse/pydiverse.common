@@ -337,6 +337,8 @@ def test_hash_pandas():
 
 @pytest.mark.skipif(pd is None or pa is None, reason="requires pandas and pyarrow")
 def test_hash_pandas_datetime_edge_case():
+    # This test requires the conversion to CSV of pandas object type columns in the hashing function.
+    # due to https://github.com/apache/arrow/issues/41896.
     df_d = pd.DataFrame(
         {"a": [1, 2, 3], "b": [{"a": dt.date(2020, 1, 1)}, {"b": dt.date(2021, 2, 2)}, {"a": dt.date(2022, 3, 3)}]}
     )
@@ -351,6 +353,8 @@ def test_hash_pandas_datetime_edge_case():
 
 @pytest.mark.skipif(pd is None or pa is None, reason="requires pandas and pyarrow")
 def test_hash_pandas_datetime_edge_case_2():
+    # This test requires the conversion to CSV of pandas object type columns in the hashing function.
+    # due to https://github.com/apache/arrow/issues/41896.
     df_d = pd.DataFrame({"a": [1, 2, 3], "b": [dt.date(2020, 1, 1), dt.date(2021, 2, 2), dt.date(2022, 3, 3)]})
     df_d_mixed = pd.DataFrame(
         {"a": [1, 2, 3], "b": [dt.date(2020, 1, 1), dt.date(2021, 2, 2), dt.datetime(2022, 3, 3, 1)]}

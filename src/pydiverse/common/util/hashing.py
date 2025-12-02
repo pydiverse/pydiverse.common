@@ -218,6 +218,7 @@ def stable_dataframe_hash(
 
     # 6) Hash subtleties of pandas DataFrame object type columns that are lost when converting
     # to pyarrow, e.g. columns mixing dates and datetimes, by hashing their CSV representation.
+    # See https://github.com/apache/arrow/issues/41896 for an example of such a conversion issue.
     if not isinstance(df, (pa.Table, pl.DataFrame)):
         import pandas as pd
 
