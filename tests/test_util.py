@@ -335,7 +335,7 @@ def test_hash_pandas():
         stable_dataframe_hash(df_f)
 
 
-@pytest.mark.skipif(pd is None or pa is None, reason="requires pandas and pyarrow")
+@pytest.mark.skipif(pd.DataFrame is None or pa.Table is None, reason="requires pandas and pyarrow")
 def test_hash_pandas_datetime_edge_case():
     # This test requires the conversion to CSV of pandas object type columns in the hashing function.
     # due to https://github.com/apache/arrow/issues/41896.
@@ -351,7 +351,7 @@ def test_hash_pandas_datetime_edge_case():
     check_df_hashes(df_d, df_d_mixed, use_polars=False)
 
 
-@pytest.mark.skipif(pd is None or pa is None, reason="requires pandas and pyarrow")
+@pytest.mark.skipif(pd.DataFrame is None or pa.Table is None, reason="requires pandas and pyarrow")
 def test_hash_pandas_datetime_edge_case_2():
     # This test requires the conversion to CSV of pandas object type columns in the hashing function.
     # due to https://github.com/apache/arrow/issues/41896.
