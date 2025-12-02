@@ -216,4 +216,17 @@ def stable_dataframe_hash(
     with ipc.RecordBatchStreamWriter(sink, t.schema, options=write_opts) as writer:
         writer.write_table(t, max_chunksize=t.num_rows)
 
-    return stable_hash(schema_hash, hashlib.sha256(sink.getvalue().to_pybytes()).hexdigest())
+    # 6) Hash subtleties of pandas DataFrame object type columns that are lost when converting
+    # to pyarrow, e.g. columns mixing dates and datetimes, by hashing their CSV representation.
+    # See https://github.com/apache/arrow/issues/41896 for an example of such a conversion issue.
+    if not isinstance(df, (pa.Table, pl.DataFrame)):
+        import pandas as pd
+
+        assert isinstance(df, pd.DataFrame), f"Dataframe of type {type(df)} not supported"
+
+        df_object = df.select_dtypes(include=["object"])
+        csv = df_object.to_csv()
+    else:
+        csv = ""
+
+    return stable_hash(schema_hash, hashlib.sha256(sink.getvalue().to_pybytes()).hexdigest(), csv)

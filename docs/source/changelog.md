@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.4 (202X-XX-XX)
+- Fix pandas hashing for edge cases
+
 ## 0.4.3 (2025-11-30)
 - drop support for python 3.10
 - add support for hashing pandas dataframes and arrow tables
