@@ -336,7 +336,6 @@ def test_hash_pandas():
 
 
 @pytest.mark.skipif(pd is None or pa is None, reason="requires pandas and pyarrow")
-@pytest.mark.xfail(reason="Pyarrow silently converts datetime to date: https://github.com/apache/arrow/issues/41896")
 def test_hash_pandas_datetime_edge_case():
     df_d = pd.DataFrame(
         {"a": [1, 2, 3], "b": [{"a": dt.date(2020, 1, 1)}, {"b": dt.date(2021, 2, 2)}, {"a": dt.date(2022, 3, 3)}]}
@@ -351,7 +350,6 @@ def test_hash_pandas_datetime_edge_case():
 
 
 @pytest.mark.skipif(pd is None or pa is None, reason="requires pandas and pyarrow")
-@pytest.mark.xfail(reason="Pyarrow silently converts datetime to date: https://github.com/apache/arrow/issues/41896")
 def test_hash_pandas_datetime_edge_case_2():
     df_d = pd.DataFrame({"a": [1, 2, 3], "b": [dt.date(2020, 1, 1), dt.date(2021, 2, 2), dt.date(2022, 3, 3)]})
     df_d_mixed = pd.DataFrame(
