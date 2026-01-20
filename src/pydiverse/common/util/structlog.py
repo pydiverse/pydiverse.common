@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo and pydiverse contributors 2025-2025
+# Copyright (c) QuantCo and pydiverse contributors 2025-2026
 # SPDX-License-Identifier: BSD-3-Clause
 import logging
 import sys
@@ -21,6 +21,8 @@ except ImportError:
     class dev:
         class ConsoleRenderer:
             pass
+
+        plain_traceback = None
 
     structlog.dev = dev
     structlog_installed = False
@@ -71,6 +73,7 @@ def setup_logging(
     log_level=logging.INFO,
     log_stream=None,
     timestamp_format="%Y-%m-%d %H:%M:%S.%f",
+    exception_formatter=structlog.dev.plain_traceback,
 ):
     """Configures structlog and logging with sane defaults."""
 
@@ -86,7 +89,9 @@ def setup_logging(
 
     if structlog_installed:
         # --- Final renderer used for BOTH stdlib and structlog events ---
-        renderer = PydiverseConsoleRenderer(render_keys=["query", "table_obj", "task", "table", "detail"])
+        renderer = PydiverseConsoleRenderer(
+            render_keys=["query", "table_obj", "task", "table", "detail"], exception_formatter=exception_formatter
+        )
 
         # --- ProcessorFormatter wires stdlib logging -> structlog processors ---
         formatter = structlog.stdlib.ProcessorFormatter(
