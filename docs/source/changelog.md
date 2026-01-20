@@ -1,6 +1,9 @@
 # Changelog
 
-## 0.4.4 (202X-XX-XX)
+## 0.4.4 (2026-01-20)
+- change default structlog exception formatter from RichTracebackFormatter to plain_traceback
+    (with fail_fast=True you get a second stacktrace which may be pytest enriched)
+  You can get the old behavior with `setup_logging(exception_formatter=structlog.dev.rich_traceback)`.
 - Fix pandas hashing for edge cases
 
 ## 0.4.3 (2025-11-30)

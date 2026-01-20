@@ -29,6 +29,18 @@ def test_structlog():
     ]
 
 
+@pytest.mark.skip("remove stacktrace from successful log")
+@pytest.mark.skipif(structlog is None, reason="requires structlog")
+def test_structlog_exception_print():
+    logger = structlog.get_logger(__name__ + ".test_structlog")
+    logger.info("start test")
+
+    try:
+        raise RuntimeError("this is expected")
+    except RuntimeError:
+        logger.exception("This is a test log exception message")
+
+
 @pytest.mark.skipif(structlog is None, reason="requires structlog")
 def test_structlog_level01():
     logger = structlog.get_logger(__name__ + ".test_structlog_level01")
