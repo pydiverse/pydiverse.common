@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo and pydiverse contributors 2025-2025
+# Copyright (c) QuantCo and pydiverse contributors 2025-2026
 # SPDX-License-Identifier: BSD-3-Clause
 import logging
 import sys
@@ -21,6 +21,8 @@ except ImportError:
     class dev:
         class ConsoleRenderer:
             pass
+
+        plain_traceback = None
 
     structlog.dev = dev
     structlog_installed = False
