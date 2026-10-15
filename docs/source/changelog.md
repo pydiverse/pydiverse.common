@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.5 (2026-10-15)
+- Update dependencies
+
 ## 0.4.4 (2026-01-20)
 - change default structlog exception formatter from RichTracebackFormatter to plain_traceback
     (with fail_fast=True you get a second stacktrace which may be pytest enriched)
