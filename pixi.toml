@@ -5,6 +5,7 @@ authors = [
   "Nicolas Müller <github@nicolasmueller.eu>",
 ]
 channels = ["conda-forge"]
+exclude-newer = "7d"
 name = "pydiverse.common"
 platforms = ["linux-64", "osx-64", "osx-arm64", "win-64", "linux-aarch64"]
 
