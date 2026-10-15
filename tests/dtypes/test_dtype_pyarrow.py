@@ -111,10 +111,16 @@ def test_dtype_to_pyarrow_enum():
         if pa.types.is_dictionary(field.type):
             # somehow the index type can jump around in polars and fixing it to uint32
             # seems reasonable
+            # polars>=2 exports enums with ordered=True while polars<2 used
+            # ordered=False. We deliberately keep ordered=False in to_arrow_field
+            # because it is consistent with to_pandas (unordered CategoricalDtype)
+            # and all supported polars versions (>=1.32) read it back as the same
+            # pl.Enum, since the categories are restored from the _PL_ENUM_VALUES2
+            # metadata.
             return (
                 pa.field(
                     field.name,
-                    pa.dictionary(pa.uint32(), field.type.value_type, field.type.ordered),
+                    pa.dictionary(pa.uint32(), field.type.value_type, ordered=False),
                 )
                 .with_nullable(field.nullable)
                 .with_metadata(field.metadata)
@@ -131,6 +137,8 @@ def test_dtype_to_pyarrow_enum():
         actual = pa.schema([type_.to_arrow_field("x", nullable=True)])
         assert actual == expected
         assert actual.field(0).metadata == expected.field(0).metadata
+        # polars must read our field back as the original enum
+        assert pl.from_arrow(actual.empty_table()).schema["x"] == expected_dtype
 
     assert_conversion(Enum("a", "b;c"), pl.Enum(["a", "b;c"]))
 

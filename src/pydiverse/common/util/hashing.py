@@ -58,8 +58,6 @@ def _hash_polars_dataframe(df: pl.DataFrame, use_init_repr=False) -> str:
     the pyarrow hashing function in case it breaks.
 
     The function may fail for some known causes:
-    * In old polars versions, hash_rows() does not work if there are list columns
-      https://github.com/pola-rs/polars/issues/24121
     * Hashing categorical and enum columns may lead to unstable results depending on the internal dictionary encoding.
     * E.g.
     ```python
@@ -224,7 +222,7 @@ def stable_dataframe_hash(
 
         assert isinstance(df, pd.DataFrame), f"Dataframe of type {type(df)} not supported"
 
-        df_object = df.select_dtypes(include=["object"])
+        df_object = df.loc[:, df.dtypes == "object"]
         csv = df_object.to_csv()
     else:
         csv = ""
