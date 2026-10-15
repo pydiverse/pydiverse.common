@@ -3,7 +3,7 @@
 import enum
 
 
-class PandasBackend(str, enum.Enum):
+class PandasBackend(enum.Enum):
     NUMPY = "numpy"
     ARROW = "arrow"
 
