@@ -33,6 +33,7 @@ jobs:
         os:
           - ubuntu-latest
         environment:
+          - old
           - py311
           - py314
           - py311all

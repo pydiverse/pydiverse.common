@@ -1,7 +1,8 @@
-[project]
+[workspace]
 authors = [
   "Martin Trautmann <windiana@users.sf.net>",
   "Finn Rudolph <finn.rudolph@t-online.de>",
+  "Nicolas Müller <github@nicolasmueller.eu>",
 ]
 channels = ["conda-forge"]
 name = "pydiverse.common"
@@ -10,27 +11,24 @@ platforms = ["linux-64", "osx-64", "osx-arm64", "win-64", "linux-aarch64"]
 [tasks]
 postinstall = "pip install --no-build-isolation --no-deps --disable-pip-version-check -e ."
 
-[host-dependencies]
+[dependencies]
 pip = "*"
 hatchling = "*"
-
-[dependencies]
 python = ">=3.11.14,<3.15.0a0"
 python-box = ">=7.3.2,<8"
 
 [feature.dev.dependencies]
 pre-commit = ">=3"
 pre-commit-hooks = "*"
-pixi-pycharm = ">=0.0.6"
 pytest = ">=7.1.2"
 pytest-xdist = ">=2.5.0"
 
 [feature.optional.dependencies]
-structlog = ">=25.2.0,<26"
-polars = ">=0.19, <2"
+structlog = ">=25.2.0,<27"
+polars = ">=1.32.3, <3"
 pandas = ">=2"
-sqlalchemy = ">=1.4.39, <3"
-pyarrow = ">=11.0.0"
+sqlalchemy = ">=1.4.41, <3"
+pyarrow = ">=19.0.0"
 
 [feature.release.dependencies]
 hatch = ">=1.12.0"
@@ -90,6 +88,7 @@ py311all = ["py311", "dev", "optional"]
 py312all = ["py312", "dev", "optional"]
 py313all = ["py313", "dev", "optional"]
 py314all = ["py314", "dev", "optional"]
+old = { features = ["py311", "dev", "optional"], solve-strategy = "lowest" }
 docs = ["docs"]
 lint = { features = ["lint"], no-default-feature = true }
 release = { features = ["release"], no-default-feature = true }
